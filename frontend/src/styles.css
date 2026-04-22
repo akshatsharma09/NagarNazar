@@ -1,0 +1,221 @@
+html,
+body,
+#root {
+
+  height: 100%;
+  margin: 0;
+
+}
+
+/* MAIN LAYOUT */
+
+.mainLayout {
+
+  display: flex;
+
+  height: 100vh;
+
+}
+
+/* SIDEBAR */
+
+.sidebar {
+
+  width: 220px;
+
+  background: #ecf0f1;
+
+  padding: 15px;
+
+  box-shadow:
+  2px 0px 8px rgba(0,0,0,0.2);
+
+  z-index: 1000;
+
+}
+
+/* MAP AREA */
+
+.mapSection {
+
+  flex: 1;
+
+  position: relative;
+
+}
+
+/* MAP */
+
+.mapContainer {
+
+  width: 100%;
+
+  height: 100vh;
+
+}
+
+/* LEGEND */
+
+.legendBox {
+
+  position: absolute;
+
+  top: 20px;
+
+  right: 20px;
+
+  background: white;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  box-shadow:
+  0px 0px 12px rgba(0,0,0,0.3);
+
+}
+
+/* STATS */
+
+.statsBox {
+
+  position: absolute;
+
+  bottom: 20px;
+
+  right: 20px;
+
+  background: white;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  box-shadow:
+  0px 0px 12px rgba(0,0,0,0.3);
+
+}
+
+/* SEARCH */
+
+.searchBox {
+
+  position: absolute;
+
+  top: 20px;
+
+  left: 20px;
+
+}
+
+.searchBox input {
+
+  padding: 10px;
+
+  width: 260px;
+
+  border-radius: 6px;
+
+  border: 1px solid #ccc;
+
+}
+
+/* BUTTONS */
+
+.tiltButton {
+
+  position: absolute;
+
+  bottom: 70px;
+
+  left: 20px;
+
+  padding: 10px;
+
+  background: #34495e;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+}
+
+.resetButton {
+
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 20px;
+
+  padding: 10px;
+
+  background: #2c3e50;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+}
+
+.landingContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: radial-gradient(circle at top, #16213e, #0b1220);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 3.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #00d4ff;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+.textBlock {
+  max-width: 700px;
+  font-size: 1rem;
+  margin: 10px 0;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.highlight {
+  color: #00d4ff;
+  font-weight: 500;
+}
+
+.mainButton {
+  margin-top: 30px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+
+  background: #00d4ff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.mainButton:hover {
+  transform: scale(1.05);
+  background: #00b8e6;
+}
