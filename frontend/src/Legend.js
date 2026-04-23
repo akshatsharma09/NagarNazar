@@ -27,32 +27,12 @@ function Legend() {
 
       <hr className="border-t-2 border-black my-2"/>
 
-<<<<<<< HEAD
-      <p>
-        <span style={{color:"#0077ff"}}>━━</span>
-        Water Pipeline
-      </p>
-
-      <p>
-        <span style={{color:"#8000ff"}}>– –</span>
-        Sewage Pipeline
-      </p>
-
-      <p>
-        <span style={{color:"#FFD700"}}>━━</span>
-        Electricity Line
-      </p>
-
-      <p>
-        ⚡ Electric Pole
-      </p>
-=======
       <div className="space-y-1 text-sm font-bold">
-        <p>💧 Water</p>
-        <p>⚡ Electricity</p>
-        <p>🚰 Sewage</p>
+        <p><span style={{color:"#0077ff"}}>━━</span> 💧 Water Pipeline</p>
+        <p><span style={{color:"#8000ff"}}>– –</span> 🚰 Sewage Pipeline</p>
+        <p><span style={{color:"#FFD700"}}>━━</span> ⚡ Electricity Line</p>
+        <p>⚡ Electric Pole</p>
       </div>
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
     </div>
 

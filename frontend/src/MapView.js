@@ -2,11 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-<<<<<<< HEAD
-mapboxgl.accessToken =process.env.REACT_APP_MAPBOX_TOKEN;
-=======
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 function MapView({ utilities }) {
 
