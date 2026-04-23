@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import pandas as pd
+
+from data_loader import load_data
+from risk_engine import calculate_risk
 
 app = FastAPI()
-
-# Allow frontend connection
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,90 +14,78 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -----------------------------
-# Risk Prediction Logic
-# -----------------------------
+data = load_data()
 
-def calculate_risk(age, usage):
-
-    if age > 70 and usage > 80:
-        return "High"
-
-    elif age > 40 and usage > 50:
-        return "Medium"
-
-    else:
-        return "Low"
-
-
-# -----------------------------
-# Action Suggestion
-# -----------------------------
-
-def suggest_action(risk):
-
-    if risk == "High":
-        return "Immediate Repair Required"
-
-    elif risk == "Medium":
-        return "Inspection Required"
-
-    else:
-        return "Normal Monitoring"
-
-
-# -----------------------------
-# Load CSV Data
-# -----------------------------
-
-def load_data():
-
-    df = pd.read_csv("sample_data.csv")
-
-    utilities = []
-
-    for _, row in df.iterrows():
-
-        try:
-
-            age = int(row["age"])
-            usage = int(row["usage"])
-
-            risk = calculate_risk(age, usage)
-
-            action = suggest_action(risk)
-
-            utilities.append({
-
-                "id": row["id"],
-                "type": row["type"],
-
-                "lat": float(row["lat"]),
-                "lng": float(row["lng"]),
-
-                "age": age,
-                "usage": usage,
-
-                "risk": risk,
-                "action": action
-
-            })
-
-        except:
-
-            continue
-
-    return utilities
-
-
-# -----------------------------
-# API Endpoint
-# -----------------------------
 
 @app.get("/utilities")
-
 def get_utilities():
 
-    data = load_data()
+    result = []
 
-    return data
+    for u in data:
+
+        risk, action = calculate_risk(
+            u["age"],
+            u["usage"]
+        )
+
+        result.append({
+            **u,
+            "risk": risk,
+            "action": action
+        })
+
+    return result
+
+
+@app.get("/network")
+def get_network():
+
+    water_lines = []
+    sewage_lines = []
+    electric_lines = []
+    poles = []
+
+    grouped = {}
+
+    for u in data:
+
+        grouped.setdefault(
+            (u["type"], u["group"]),
+            []
+        ).append(u)
+
+    for (t, g), items in grouped.items():
+
+        items.sort(
+            key=lambda x: x["id"]
+        )
+
+        coords = [
+            [u["lng"], u["lat"]]
+            for u in items
+        ]
+
+        if t == "Water":
+            water_lines.append(coords)
+
+        elif t == "Sewage":
+            sewage_lines.append(coords)
+
+        elif t == "Electricity":
+
+            electric_lines.append(coords)
+
+            for u in items:
+
+                poles.append({
+                    "lat": u["lat"],
+                    "lng": u["lng"]
+                })
+
+    return {
+        "water": water_lines,
+        "sewage": sewage_lines,
+        "electric": electric_lines,
+        "poles": poles
+    }

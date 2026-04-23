@@ -1,12 +1,12 @@
 def calculate_risk(age, usage):
 
-    score = age * 0.6 + usage * 0.4
+    score = (age * 0.6) + (usage * 0.4)
 
-    if score > 70:
-        return "High"
+    if score >= 80:
+        return "High", "Inspection Required"
 
-    elif score > 40:
-        return "Medium"
+    elif score >= 50:
+        return "Medium", "Schedule Maintenance"
 
     else:
-        return "Low"
+        return "Low", "Normal Monitoring"

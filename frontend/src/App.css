@@ -36,3 +36,129 @@
     transform: rotate(360deg);
   }
 }
+
+/* MARKER STYLE */
+
+.utility-marker {
+
+  width: 16px;
+
+  height: 16px;
+
+  border-radius: 50%;
+
+  border: 2px solid white;
+
+  cursor: pointer;
+
+}
+
+/* GLOW EFFECT */
+
+.marker-glow {
+
+  box-shadow:
+
+    0 0 10px 3px rgba(255,255,255,0.8),
+
+    0 0 18px 6px rgba(0,123,255,0.6);
+
+}
+
+/* POPUP CARD */
+
+.popup-card {
+
+  font-family: Arial;
+
+  min-width: 180px;
+
+}
+
+.popup-card h3 {
+
+  margin: 0 0 6px 0;
+
+  color: #0077ff;
+
+}
+
+.popup-card p {
+
+  margin: 2px 0;
+
+  font-size: 13px;
+
+}
+
+/* RISK COLORS */
+
+.risk-High {
+
+  color: red;
+
+  font-weight: bold;
+
+}
+
+.risk-Medium {
+
+  color: orange;
+
+  font-weight: bold;
+
+}
+
+.risk-Low {
+
+  color: green;
+
+  font-weight: bold;
+
+}
+
+/* BUTTONS */
+
+.tilt-btn {
+
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 20px;
+
+  padding: 10px 14px;
+
+  background: #0077ff;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+}
+
+.reset-btn {
+
+  position: absolute;
+
+  bottom: 20px;
+
+  left: 130px;
+
+  padding: 10px 14px;
+
+  background: #555;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+}

@@ -12,7 +12,8 @@ function LandingPage() {
 
       {/* Tagline */}
       <p className="tagline">
-        Apne Sheher ko Dekho, Damjho aur Surakshit Rakho
+        Apne Sheher ko Dekho, 
+        samjho aur Surakshit Rakho
       </p>
 
       {/* Problem */}
