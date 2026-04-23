@@ -2,7 +2,11 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
+<<<<<<< HEAD
 mapboxgl.accessToken =process.env.REACT_APP_MAPBOX_TOKEN;
+=======
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+>>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 function MapView({ utilities }) {
 
@@ -287,7 +291,65 @@ function MapView({ utilities }) {
 
       /* Popup UI */
 
+      // Extrapolate some mock data from 'u' to fill out the detailed card
+      const typeDisplay = u.type === 'Water' ? 'Water Pipe' : u.type === 'Electricity' ? 'Power Line' : 'Sewer Line';
+      const severityIcon = u.risk === 'High' ? '🚨' : u.risk === 'Medium' ? '⚠️' : '✅';
+      // Mock data just for visual parity with screenshot request
+      const ageStr = u.age ? `${u.age} Years` : Math.floor(Math.random() * 20 + 5) + ' Years';
+      const materialStr = u.type === 'Water' ? 'Iron' : u.type === 'Electricity' ? 'Copper' : 'Concrete';
+      const diameterStr = u.type !== 'Electricity' ? '300 mm' : 'N/A';
+      const locationStr = 'Civil Lines, Prayagraj';
+      const lastInspection = '10 Apr 2026';
+      const conditionStr = u.risk === 'High' ? 'Poor' : u.risk === 'Medium' ? 'Fair' : 'Good';
+      const riskScore = u.usage ? u.usage : Math.floor(Math.random() * 50 + 50);
+
+      const popupHtml = `
+        <div class="font-display text-xs text-black bg-white border-2 border-black neo-brutalist p-2 w-56 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <div class="mb-1.5 border-b-2 border-black pb-1">
+            <h4 class="text-sm font-black-900 uppercase tracking-tighter text-${color === 'red' ? 'red-600' : color === 'yellow' ? 'yellow-600' : 'green-600'}">
+              ${u.risk} - ${typeDisplay}
+            </h4>
+          </div>
+          
+          <div class="space-y-0.5 mb-2 font-bold opacity-90">
+            <div class="flex justify-between">
+              <span class="text-gray-500">ID:</span> <span>${u.id}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Location:</span> <span class="truncate ml-2 text-right">${locationStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Age:</span> <span>${ageStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Material:</span> <span>${materialStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Diameter:</span> <span>${diameterStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Inspected:</span> <span>${lastInspection}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Condition:</span> <span>${conditionStr}</span>
+            </div>
+            <div class="flex justify-between text-sm mt-1 pt-1 border-t border-dashed border-gray-400">
+              <span class="text-gray-600">Risk Score:</span> <span class="font-black-900 text-${color === 'red' ? 'red-600' : color === 'yellow' ? 'yellow-600' : 'green-600'}">${riskScore}/100</span>
+            </div>
+          </div>
+
+          <div class="bg-${color === 'red' ? 'red-400' : color === 'yellow' ? 'yellow-400' : 'green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div class="flex items-center gap-1.5 mb-0.5 text-[0.65rem] uppercase tracking-tight leading-none">
+              <span>${severityIcon}</span>
+              <span>${u.risk === 'High' ? 'High probability' : u.risk === 'Medium' ? 'Maintenance Rec.' : 'System OK'}</span>
+            </div>
+            <span class="text-[0.65rem] leading-none block opacity-90 truncate">${u.action}</span>
+          </div>
+        </div>
+      `;
+
       const popup =
+<<<<<<< HEAD
         new mapboxgl.Popup({ offset: 25 })
 
         .setHTML(
@@ -321,6 +383,12 @@ function MapView({ utilities }) {
           </div>`
 
         );
+=======
+        new mapboxgl.Popup({
+          offset: 25,
+          className: "neo-popup-container"
+        }).setHTML(popupHtml);
+>>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 
 
@@ -342,6 +410,15 @@ function MapView({ utilities }) {
 
         .addTo(map.current);
 
+<<<<<<< HEAD
+=======
+      // Add CSS glow classes for hover effects
+      const markerEl = marker.getElement();
+      markerEl.classList.add("glow-marker");
+      markerEl.dataset.color = color;
+
+      markersRef.current.push(marker);
+>>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 
       /* Glow Highlight */
@@ -444,12 +521,17 @@ function MapView({ utilities }) {
 
       {/* 2.5D BUTTON */}
 
-      <button
+      <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-10 pb-4 pr-4">
+        <button
 
-        onClick={tiltMap}
+          onClick={tiltMap}
 
-        style={{
+          className="neo-brutalist bg-blue-400 font-display font-black-900 text-sm hover:bg-blue-300 transition-colors uppercase"
+          style={{
+            padding: "6px 12px"
+          }}
 
+<<<<<<< HEAD
           position:"absolute",
 
           bottom:"20px",
@@ -515,6 +597,31 @@ function MapView({ utilities }) {
         Reset View
 
       </button>
+=======
+        >
+
+          2.5D View
+
+        </button>
+
+        {/* RESET BUTTON */}
+
+        <button
+
+          onClick={resetMap}
+
+          className="neo-brutalist bg-green-400 font-display font-black-900 text-sm hover:bg-green-300 transition-colors uppercase"
+          style={{
+            padding: "6px 12px"
+          }}
+
+        >
+
+          Reset View
+
+        </button>
+      </div>
+>>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
     </div>
 

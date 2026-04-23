@@ -45,20 +45,21 @@ function Dashboard() {
   }, [typeFilter, riskFilter, utilities]);
 
   return (
-    <div className="mainLayout">
+    <div className="mainLayout flex h-screen bg-blue-50 overflow-hidden font-display">
 
       <Sidebar
         setTypeFilter={setTypeFilter}
         setRiskFilter={setRiskFilter}
       />
 
-      <div className="mapSection">
+      <div className="mapSection flex-1 relative m-4 ml-0 neo-brutalist border-4 border-black">
 
         <MapView utilities={filteredUtilities} />
 
-        <Legend />
-
-        <StatsPanel data={filteredUtilities} />
+        <div className="absolute top-6 right-16 flex flex-col gap-4 z-10 h-[calc(100%-3rem)] overflow-y-auto pb-6 pr-4 hidden md:flex" style={{ width: 'auto' }}>
+          <Legend />
+          <StatsPanel data={filteredUtilities} />
+        </div>
 
         <SearchBox
           utilities={utilities}
