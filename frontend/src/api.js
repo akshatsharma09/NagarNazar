@@ -4,7 +4,7 @@ export const fetchUtilities = async () => {
 
   const response =
     await axios.get(
-      "http://localhost:8000/utilities"
+      "/utilities"
     );
 
   return response.data;
