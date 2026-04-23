@@ -2,19 +2,15 @@ import csv
 
 def load_data():
 
-    utilities = []
+    data = []
 
-    with open(
-        "sample_data.csv",
-        newline="",
-        encoding="utf-8"
-    ) as csvfile:
+    with open("sample_data.csv", newline="") as file:
 
-        reader = csv.DictReader(csvfile)
+        reader = csv.DictReader(file)
 
         for row in reader:
 
-            utilities.append({
+            data.append({
 
                 "id": row["id"],
 
@@ -28,14 +24,22 @@ def load_data():
 
                 "usage": int(row["usage"]),
 
-                # KEEP group as STRING
+                "start": row["start"],
+
+                "end": row["end"],
+
                 "group": row["group"],
 
-                # Optional start/end fields
-                "start": row.get("start","Unknown"),
+                "location_name": row["location_name"],
 
-                "end": row.get("end","Unknown")
+                "material": row["material"],
+
+                "diameter_mm": int(row["diameter_mm"]),
+
+                "last_inspection": row["last_inspection"],
+
+                "condition": row["condition"]
 
             })
 
-    return utilities
+    return data

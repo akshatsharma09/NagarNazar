@@ -14,8 +14,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Load CSV data
 data = load_data()
 
+
+# ==============================
+# UTILITIES API
+# ==============================
 
 @app.get("/utilities")
 def get_utilities():
@@ -24,19 +29,31 @@ def get_utilities():
 
     for u in data:
 
-        risk, action = calculate_risk(
+        # Updated unpacking (now 4 values)
+        risk, action, probability, outcome = calculate_risk(
             u["age"],
             u["usage"]
         )
 
         result.append({
+
             **u,
+
             "risk": risk,
-            "action": action
+            "action": action,
+
+            # NEW FIELDS FOR POPUP
+            "probability": probability,
+            "outcome": outcome
+
         })
 
     return result
 
+
+# ==============================
+# NETWORK API (LINES + POLES)
+# ==============================
 
 @app.get("/network")
 def get_network():
@@ -48,6 +65,7 @@ def get_network():
 
     grouped = {}
 
+    # Group by utility type + group
     for u in data:
 
         grouped.setdefault(
@@ -55,6 +73,7 @@ def get_network():
             []
         ).append(u)
 
+    # Build line connections
     for (t, g), items in grouped.items():
 
         items.sort(
@@ -62,30 +81,39 @@ def get_network():
         )
 
         coords = [
-            [u["lng"], u["lat"]]
+
+            [float(u["lng"]), float(u["lat"])]
+
             for u in items
         ]
 
         if t == "Water":
+
             water_lines.append(coords)
 
         elif t == "Sewage":
+
             sewage_lines.append(coords)
 
         elif t == "Electricity":
 
             electric_lines.append(coords)
 
+            # Create poles
             for u in items:
 
                 poles.append({
-                    "lat": u["lat"],
-                    "lng": u["lng"]
+
+                    "lat": float(u["lat"]),
+                    "lng": float(u["lng"])
+
                 })
 
     return {
+
         "water": water_lines,
         "sewage": sewage_lines,
         "electric": electric_lines,
         "poles": poles
+
     }

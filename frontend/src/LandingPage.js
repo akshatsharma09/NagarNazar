@@ -41,6 +41,12 @@ export default function LandingPage() {
               </div>
             </motion.div>
 
+      {/* Tagline */}
+      <p className="tagline">
+
+      </p>
+
+
             {/* Typography Cluster */}
             <motion.div 
               initial={{ opacity: 0, y: -10 }}
@@ -128,7 +134,7 @@ export default function LandingPage() {
               whileTap={{ translate: "2px 2px", boxShadow: "2px 2px 0px #000" }}
               className="px-6 md:px-12 py-2 md:py-3 font-display text-[11px] md:text-[14px] font-black uppercase tracking-wider bg-[#3300FF] text-white border-[4px] border-black shadow-[8px_8px_0px_#000] transition-all"
             >
-              INITIALIZE PROTOCOL
+              UPLOAD LOCATIONS FILE
             </motion.button>
             
             <motion.button 

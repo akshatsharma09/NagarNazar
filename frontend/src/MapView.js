@@ -49,9 +49,6 @@ function MapView({ utilities }) {
 
   }, []);
 
-
-
-
   /* 3D BUILDINGS */
 
   function add3DBuildings() {
@@ -91,7 +88,7 @@ function MapView({ utilities }) {
 
       paint: {
 
-        "fill-extrusion-color": "#aaa",
+        "fill-extrusion-color": "#cccccc",
 
         "fill-extrusion-height": ["get","height"],
 
@@ -104,9 +101,6 @@ function MapView({ utilities }) {
     }, labelLayerId);
 
   }
-
-
-
 
   /* LOAD NETWORK */
 
@@ -121,9 +115,7 @@ function MapView({ utilities }) {
 
       const data = res.data;
 
-
-
-      /* WATER PIPELINES */
+      /* WATER */
 
       map.current.addSource(
         "water-network",
@@ -164,15 +156,13 @@ function MapView({ utilities }) {
 
           "line-width": 4,
 
-          "line-opacity": 0.8
+          "line-opacity": 0.9
 
         }
 
       });
 
-
-
-      /* SEWAGE PIPELINES */
+      /* SEWAGE */
 
       map.current.addSource(
         "sewage-network",
@@ -219,29 +209,6 @@ function MapView({ utilities }) {
 
       });
 
-
-
-      /* ELECTRIC POLES */
-
-      data.poles.forEach(p => {
-
-        const el =
-          document.createElement("img");
-
-        el.src = "/electric-pole.png";
-
-        el.style.width = "26px";
-
-        el.style.height = "26px";
-
-        new mapboxgl.Marker(el)
-
-          .setLngLat([p.lng,p.lat])
-
-          .addTo(map.current);
-
-      });
-
     }
 
     catch(err){
@@ -252,24 +219,17 @@ function MapView({ utilities }) {
 
   }
 
-
-
-
   /* UTILITY MARKERS */
 
   useEffect(() => {
 
     if (!map.current) return;
 
-    /* Remove old markers */
-
     markersRef.current.forEach(
       m => m.remove()
     );
 
     markersRef.current = [];
-
-
 
     utilities.forEach(u => {
 
@@ -283,55 +243,89 @@ function MapView({ utilities }) {
       if (u.risk === "High")
         color = "red";
 
-
-
-      /* Popup UI */
+      /* MODERN POPUP UI */
 
       const popup =
         new mapboxgl.Popup({ offset: 25 })
 
-        .setHTML(
+        .setHTML(`
 
-          `<div style="
-            font-size:13px;
-            line-height:1.5;
-          ">
+<div style="
+font-family:Segoe UI;
+padding:12px;
+min-width:230px;
+line-height:1.5;
+">
 
-          <b style="font-size:14px;">
-            ${u.id}
-          </b><br/>
+<div style="
+font-weight:bold;
+font-size:15px;
+color:${color};
+margin-bottom:6px;
+">
 
-          <b>Type:</b> ${u.type}<br/>
+${u.id} — ${u.type}
 
-          <b>From:</b> ${u.start}<br/>
+</div>
 
-          <b>To:</b> ${u.end}<br/>
+<div style="
+font-size:13px;
+">
 
-          <b>Risk:</b>
-          <span style="
-            color:${color};
-            font-weight:bold;
-          ">
-          ${u.risk}
-          </span><br/>
+📍 <b>Location:</b><br/>
+${u.location_name || u.start}<br/><br/>
 
-          <b>Action:</b>
-          ${u.action}
+🧱 <b>Material:</b>
+${u.material || "N/A"}<br/>
 
-          </div>`
+📏 <b>Diameter:</b>
+${u.diameter_mm || "N/A"} mm<br/>
 
-        );
+⏳ <b>Age:</b>
+${u.age} Years<br/>
 
+🛠 <b>Last Inspection:</b><br/>
+${u.last_inspection || "N/A"}<br/><br/>
 
+⚠ <b>Condition:</b>
+<span style="
+color:${
+u.condition==="Critical"
+?"red":
+u.condition==="Moderate"
+?"orange":
+"green"
+};
+font-weight:bold;
+">
 
-      /* DEFAULT MAPBOX MARKER (OLD STYLE) */
+${u.condition || "Good"}
+
+</span>
+
+<br/><br/>
+
+<b>Risk Level:</b>
+<span style="
+color:${color};
+font-weight:bold;
+">
+${u.risk}
+</span>
+
+<br/>
+
+<b>Action:</b><br/>
+${u.action}
+
+</div>
+
+</div>
+
+`);
 
       const marker =
-        new mapboxgl.Marker({
-
-          color: color
-
-        })
+        new mapboxgl.Marker({ color })
 
         .setLngLat([
           Number(u.lng),
@@ -342,9 +336,7 @@ function MapView({ utilities }) {
 
         .addTo(map.current);
 
-
-
-      /* Glow Highlight */
+      /* Glow highlight */
 
       marker.getElement().addEventListener(
         "click",
@@ -352,21 +344,16 @@ function MapView({ utilities }) {
 
           markersRef.current.forEach(
             m => {
-
               m.getElement()
-                .style.filter =
-                  "none";
-
+                .style.filter = "none";
             }
           );
 
           marker.getElement().style.filter =
-            "drop-shadow(0 0 8px cyan)";
+            "drop-shadow(0 0 12px cyan)";
 
         }
       );
-
-
 
       markersRef.current.push(marker);
 
@@ -374,10 +361,7 @@ function MapView({ utilities }) {
 
   }, [utilities]);
 
-
-
-
-  /* 2.5D BUTTON */
+  /* 2.5D */
 
   const tiltMap = () => {
 
@@ -397,9 +381,7 @@ function MapView({ utilities }) {
 
   };
 
-
-
-  /* RESET BUTTON */
+  /* RESET */
 
   const resetMap = () => {
 
@@ -419,101 +401,27 @@ function MapView({ utilities }) {
 
   };
 
-
-
-
   return (
 
-    <div
-      style={{
-        width:"100%",
-        height:"100%",
-        position:"relative"
-      }}
-    >
+    <div className="mapWrapper">
 
       <div
         ref={mapContainer}
-        style={{
-          width:"100%",
-          height:"100%"
-        }}
+        className="mapContainer"
       />
 
-
-
-      {/* 2.5D BUTTON */}
-
       <button
-
+        className="btnPrimary"
         onClick={tiltMap}
-
-        style={{
-
-          position:"absolute",
-
-          bottom:"20px",
-
-          left:"20px",
-
-          padding:"10px 14px",
-
-          background:"#0077ff",
-
-          color:"white",
-
-          border:"none",
-
-          borderRadius:"6px",
-
-          cursor:"pointer",
-
-          fontWeight:"bold"
-
-        }}
-
       >
-
         2.5D View
-
       </button>
 
-
-
-      {/* RESET BUTTON */}
-
       <button
-
+        className="btnSecondary"
         onClick={resetMap}
-
-        style={{
-
-          position:"absolute",
-
-          bottom:"20px",
-
-          left:"130px",
-
-          padding:"10px 14px",
-
-          background:"#555",
-
-          color:"white",
-
-          border:"none",
-
-          borderRadius:"6px",
-
-          cursor:"pointer",
-
-          fontWeight:"bold"
-
-        }}
-
       >
-
         Reset View
-
       </button>
 
     </div>

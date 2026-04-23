@@ -1,32 +1,43 @@
-id,type,lat,lng,age,usage,start,end,group
+id,type,lat,lng,age,usage,start,end,group,location_name,material,diameter_mm,last_inspection,condition
 
-W101,Water,25.4800,81.8000,65,75,Zone-A1,Zone-A2,A
-W102,Water,25.4800,81.8200,70,82,Zone-A2,Zone-A3,A
-W103,Water,25.4800,81.8400,68,79,Zone-A3,Zone-A4,A
-W104,Water,25.4800,81.8600,72,85,Zone-A4,Zone-A5,A
-W105,Water,25.4800,81.8800,66,78,Zone-A5,Zone-A6,A
+W101,Water,25.4800,81.8000,65,75,Zone-A1,Zone-A2,A,Kydganj Main Line,PVC,300,2025-01-12,Moderate
+W102,Water,25.4800,81.8200,70,82,Zone-A2,Zone-A3,A,Kydganj Sector 2,DI,350,2024-12-05,Moderate
+W103,Water,25.4800,81.8400,68,79,Zone-A3,Zone-A4,A,Kydganj Market,PVC,250,2025-02-18,Good
+W104,Water,25.4800,81.8600,72,85,Zone-A4,Zone-A5,A,Kydganj Hospital Road,Steel,400,2024-10-20,Critical
+W105,Water,25.4800,81.8800,66,78,Zone-A5,Zone-A6,A,Kydganj Bridge,PVC,300,2025-01-30,Moderate
 
-W106,Water,25.4600,81.8000,75,88,Zone-B1,Zone-B2,B
-W107,Water,25.4600,81.8200,62,74,Zone-B2,Zone-B3,B
-W108,Water,25.4600,81.8400,71,83,Zone-B3,Zone-B4,B
-W109,Water,25.4600,81.8600,69,80,Zone-B4,Zone-B5,B
-W110,Water,25.4600,81.8800,73,86,Zone-B5,Zone-B6,B
+W106,Water,25.4600,81.8000,75,88,Zone-B1,Zone-B2,B,Civil Lines North,DI,450,2024-09-22,Critical
+W107,Water,25.4600,81.8200,62,74,Zone-B2,Zone-B3,B,Civil Lines Sector 2,PVC,300,2025-02-02,Good
+W108,Water,25.4600,81.8400,71,83,Zone-B3,Zone-B4,B,Civil Lines Main,PVC,250,2024-11-19,Moderate
+W109,Water,25.4600,81.8600,69,80,Zone-B4,Zone-B5,B,Civil Lines Park,DI,350,2025-01-08,Moderate
+W110,Water,25.4600,81.8800,73,86,Zone-B5,Zone-B6,B,Civil Lines East,Steel,400,2024-10-01,Critical
 
-W111,Water,25.4400,81.8000,67,79,Zone-C1,Zone-C2,C
-W112,Water,25.4400,81.8200,74,87,Zone-C2,Zone-C3,C
-W113,Water,25.4400,81.8400,65,76,Zone-C3,Zone-C4,C
-W114,Water,25.4400,81.8600,70,84,Zone-C4,Zone-C5,C
-W115,Water,25.4400,81.8800,72,88,Zone-C5,Zone-C6,C
+W111,Water,25.4400,81.8000,67,79,Zone-C1,Zone-C2,C,George Town North,PVC,300,2025-01-12,Moderate
+W112,Water,25.4400,81.8200,74,87,Zone-C2,Zone-C3,C,George Town Center,DI,350,2024-12-05,Moderate
+W113,Water,25.4400,81.8400,65,76,Zone-C3,Zone-C4,C,George Town Market,PVC,250,2025-02-18,Good
+W114,Water,25.4400,81.8600,70,84,Zone-C4,Zone-C5,C,George Town South,Steel,400,2024-10-20,Critical
+W115,Water,25.4400,81.8800,72,88,Zone-C5,Zone-C6,C,George Town Bridge,PVC,300,2025-01-30,Moderate
 
-S201,Sewage,25.4200,81.8000,35,45,Zone-D1,Zone-D2,D
-S202,Sewage,25.4200,81.8200,38,48,Zone-D2,Zone-D3,D
-S203,Sewage,25.4200,81.8400,29,36,Zone-D3,Zone-D4,D
-S204,Sewage,25.4200,81.8600,34,43,Zone-D4,Zone-D5,D
-S205,Sewage,25.4200,81.8800,31,39,Zone-D5,Zone-D6,D
+S201,Sewage,25.4200,81.8000,35,45,Zone-D1,Zone-D2,D,Allahpur Line 1,RCC,500,2025-03-01,Moderate
+S202,Sewage,25.4200,81.8200,38,48,Zone-D2,Zone-D3,D,Allahpur Line 2,RCC,600,2024-11-14,Moderate
+S203,Sewage,25.4200,81.8400,29,36,Zone-D3,Zone-D4,D,Allahpur Drain 1,PVC,450,2025-01-22,Good
+S204,Sewage,25.4200,81.8600,34,43,Zone-D4,Zone-D5,D,Allahpur Drain 2,RCC,500,2024-09-28,Critical
+S205,Sewage,25.4200,81.8800,31,39,Zone-D5,Zone-D6,D,Allahpur Drain 3,PVC,450,2025-02-11,Moderate
 
-S206,Sewage,25.4000,81.8000,30,37,Zone-E1,Zone-E2,E
-S207,Sewage,25.4000,81.8200,36,46,Zone-E2,Zone-E3,E
-S208,Sewage,25.4000,81.8400,28,35,Zone-E3,Zone-E4,E
-S209,Sewage,25.4000,81.8600,33,42,Zone-E4,Zone-E5,E
-S210,Sewage,25.4000,81.8800,29,36,Zone-E5,Zone-E6,E
+S206,Sewage,25.4000,81.8000,30,37,Zone-E1,Zone-E2,E,Kareli Sector 1,RCC,500,2024-12-20,Moderate
+S207,Sewage,25.4000,81.8200,36,46,Zone-E2,Zone-E3,E,Kareli Sector 2,RCC,550,2025-01-17,Moderate
+S208,Sewage,25.4000,81.8400,28,35,Zone-E3,Zone-E4,E,Kareli Main Drain,PVC,450,2024-10-09,Critical
+S209,Sewage,25.4000,81.8600,33,42,Zone-E4,Zone-E5,E,Kareli East,RCC,600,2025-02-26,Moderate
+S210,Sewage,25.4000,81.8800,29,36,Zone-E5,Zone-E6,E,Kareli West,PVC,450,2025-01-05,Good
 
+E301,Electricity,25.3800,81.8000,42,58,Zone-F1,Zone-F2,F,Lukerganj Grid,Aluminum,120,2025-01-18,Good
+E302,Electricity,25.3800,81.8200,48,62,Zone-F2,Zone-F3,F,Lukerganj Sector 2,Copper,150,2024-12-11,Moderate
+E303,Electricity,25.3800,81.8400,50,64,Zone-F3,Zone-F4,F,Lukerganj Market,Aluminum,130,2025-02-06,Moderate
+E304,Electricity,25.3800,81.8600,55,70,Zone-F4,Zone-F5,F,Lukerganj East,Copper,180,2024-09-15,Critical
+E305,Electricity,25.3800,81.8800,45,60,Zone-F5,Zone-F6,F,Lukerganj West,Aluminum,140,2025-01-03,Good
+
+E306,Electricity,25.3600,81.8000,44,59,Zone-G1,Zone-G2,G,Bairahana Sector 1,Copper,150,2024-11-10,Moderate
+E307,Electricity,25.3600,81.8200,52,67,Zone-G2,Zone-G3,G,Bairahana Sector 2,Aluminum,140,2025-02-14,Moderate
+E308,Electricity,25.3600,81.8400,60,75,Zone-G3,Zone-G4,G,Bairahana Main,Copper,180,2024-08-19,Critical
+E309,Electricity,25.3600,81.8600,47,61,Zone-G4,Zone-G5,G,Bairahana East,Aluminum,135,2025-01-09,Good
+E310,Electricity,25.3600,81.8800,49,63,Zone-G5,Zone-G6,G,Bairahana West,Copper,150,2024-12-22,Moderate
