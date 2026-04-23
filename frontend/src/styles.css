@@ -8,6 +8,9 @@ body,
 }
 
 /* MAPBOX POPUP OVERRIDES */
+.mapboxgl-popup.neo-popup-container {
+  z-index: 50 !important;
+}
 .neo-popup-container .mapboxgl-popup-content {
   background: transparent;
   padding: 0;
