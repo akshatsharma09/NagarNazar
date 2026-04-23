@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import MapView from "./MapView";
 import Sidebar from "./Sidebar";
 import Legend from "./Legend";
 import StatsPanel from "./StatsPanel";
 import SearchBox from "./SearchBox";
+import { fetchUtilities } from "./api";
 
 import "./styles.css";
 
@@ -19,11 +19,10 @@ function Dashboard() {
 
   /* FETCH DATA */
   useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/utilities")
-      .then(res => {
-        setUtilities(res.data);
-        setFilteredUtilities(res.data);
+    fetchUtilities()
+      .then(data => {
+        setUtilities(data);
+        setFilteredUtilities(data);
       })
       .catch(err => console.error(err));
   }, []);
