@@ -23,15 +23,22 @@ function Legend() {
       <hr/>
 
       <p>
-        💧 Water
+        <span style={{color:"#0077ff"}}>━━</span>
+        Water Pipeline
       </p>
 
       <p>
-        ⚡ Electricity
+        <span style={{color:"#8000ff"}}>– –</span>
+        Sewage Pipeline
       </p>
 
       <p>
-        🚰 Sewage
+        <span style={{color:"#FFD700"}}>━━</span>
+        Electricity Line
+      </p>
+
+      <p>
+        ⚡ Electric Pole
       </p>
 
     </div>
