@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
+mapboxgl.accessToken = "pk.eyJ1IjoiYWtzaDA3IiwiYSI6ImNtbzh6NGVjaTAzcDIyb3M4eGh2ZHluNmIifQ.v1KwsvY7PgmzIL9PAcULOg";
 
 function MapView({ utilities }) {
 
