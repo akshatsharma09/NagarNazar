@@ -335,11 +335,11 @@ function MapView({ utilities }) {
           </div>
 
           <div class="bg-${color === 'red' ? 'red-400' : color === 'yellow' ? 'yellow-400' : 'green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <div class="flex items-center gap-1.5 mb-0.5 text-[0.65rem] uppercase tracking-tight leading-none">
+            <div class="flex items-center gap-1.5 mb-1 text-[0.65rem] uppercase tracking-tight leading-none">
               <span>${severityIcon}</span>
               <span>${u.risk === 'High' ? 'High probability' : u.risk === 'Medium' ? 'Maintenance Rec.' : 'System OK'}</span>
             </div>
-            <span class="text-[0.65rem] leading-none block opacity-90 truncate">${u.action}</span>
+            <span class="text-[0.65rem] leading-normal block opacity-90 whitespace-normal break-words">${u.action}</span>
           </div>
         </div>
       `;
