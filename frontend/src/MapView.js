@@ -2,11 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-<<<<<<< HEAD
-mapboxgl.accessToken =process.env.REACT_APP_MAPBOX_TOKEN;
-=======
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 function MapView({ utilities }) {
 
@@ -349,46 +345,10 @@ function MapView({ utilities }) {
       `;
 
       const popup =
-<<<<<<< HEAD
-        new mapboxgl.Popup({ offset: 25 })
-
-        .setHTML(
-
-          `<div style="
-            font-size:13px;
-            line-height:1.5;
-          ">
-
-          <b style="font-size:14px;">
-            ${u.id}
-          </b><br/>
-
-          <b>Type:</b> ${u.type}<br/>
-
-          <b>From:</b> ${u.start}<br/>
-
-          <b>To:</b> ${u.end}<br/>
-
-          <b>Risk:</b>
-          <span style="
-            color:${color};
-            font-weight:bold;
-          ">
-          ${u.risk}
-          </span><br/>
-
-          <b>Action:</b>
-          ${u.action}
-
-          </div>`
-
-        );
-=======
         new mapboxgl.Popup({
           offset: 25,
           className: "neo-popup-container"
         }).setHTML(popupHtml);
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 
 
@@ -410,15 +370,12 @@ function MapView({ utilities }) {
 
         .addTo(map.current);
 
-<<<<<<< HEAD
-=======
       // Add CSS glow classes for hover effects
       const markerEl = marker.getElement();
       markerEl.classList.add("glow-marker");
       markerEl.dataset.color = color;
 
       markersRef.current.push(marker);
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
 
       /* Glow Highlight */
@@ -530,74 +487,6 @@ function MapView({ utilities }) {
           style={{
             padding: "6px 12px"
           }}
-
-<<<<<<< HEAD
-          position:"absolute",
-
-          bottom:"20px",
-
-          left:"20px",
-
-          padding:"10px 14px",
-
-          background:"#0077ff",
-
-          color:"white",
-
-          border:"none",
-
-          borderRadius:"6px",
-
-          cursor:"pointer",
-
-          fontWeight:"bold"
-
-        }}
-
-      >
-
-        2.5D View
-
-      </button>
-
-
-
-      {/* RESET BUTTON */}
-
-      <button
-
-        onClick={resetMap}
-
-        style={{
-
-          position:"absolute",
-
-          bottom:"20px",
-
-          left:"130px",
-
-          padding:"10px 14px",
-
-          background:"#555",
-
-          color:"white",
-
-          border:"none",
-
-          borderRadius:"6px",
-
-          cursor:"pointer",
-
-          fontWeight:"bold"
-
-        }}
-
-      >
-
-        Reset View
-
-      </button>
-=======
         >
 
           2.5D View
@@ -621,7 +510,6 @@ function MapView({ utilities }) {
 
         </button>
       </div>
->>>>>>> 6879bb4 (updated MapView with pipeline + removed token)
 
     </div>
 
