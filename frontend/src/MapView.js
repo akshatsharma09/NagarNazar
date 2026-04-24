@@ -302,7 +302,7 @@ function MapView({ utilities }) {
       const popupHtml = `
         <div class="font-display text-xs text-black bg-white border-2 border-black neo-brutalist p-2 w-56 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
           <div class="mb-1.5 border-b-2 border-black pb-1">
-            <h4 class="text-sm font-black-900 uppercase tracking-tighter text-${color === 'red' ? 'red-600' : color === 'orange' ? 'orange-600' : 'green-600'}">
+            <h4 class="text-sm font-black-900 uppercase tracking-tighter ${color === 'red' ? 'text-red-600' : color === 'orange' ? 'text-yellow-600' : 'text-green-600'}">
               ${u.risk} - ${typeDisplay}
             </h4>
           </div>
@@ -330,11 +330,11 @@ function MapView({ utilities }) {
               <span class="text-gray-500">Condition:</span> <span>${conditionStr}</span>
             </div>
             <div class="flex justify-between text-sm mt-1 pt-1 border-t border-dashed border-gray-400">
-              <span class="text-gray-600">Risk Score:</span> <span class="font-black-900 text-${color === 'red' ? 'red-600' : color === 'orange' ? 'orange-600' : 'green-600'}">${riskScore}/100</span>
+              <span class="text-gray-600">Risk Score:</span> <span class="font-black-900 ${color === 'red' ? 'text-red-600' : color === 'orange' ? 'text-yellow-600' : 'text-green-600'}">${riskScore}/100</span>
             </div>
           </div>
 
-          <div class="bg-${color === 'red' ? 'red-400' : color === 'orange' ? 'orange-400' : 'green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <div class="${color === 'red' ? 'bg-red-400' : color === 'orange' ? 'bg-yellow-400' : 'bg-green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
             <div class="flex items-center gap-1.5 mb-1 text-[0.65rem] uppercase tracking-tight leading-none">
               <span>${severityIcon}</span>
               <span>${u.risk === 'High' ? 'High probability' : u.risk === 'Medium' ? 'Maintenance Rec.' : 'System OK'}</span>
