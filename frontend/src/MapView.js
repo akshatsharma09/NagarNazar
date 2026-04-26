@@ -2,12 +2,13 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-mapboxgl.accessToken = "pk.eyJ1IjoiYWtzaDA3IiwiYSI6ImNtbzh6NGVjaTAzcDIyb3M4eGh2ZHluNmIifQ.v1KwsvY7PgmzIL9PAcULOg";
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN || "";
 
-function MapView({ utilities }) {
+function MapView({ utilities, mapRef }) {
 
   const mapContainer = useRef(null);
-  const map = useRef(null);
+  const internalMap = useRef(null);
+  const map = mapRef || internalMap;
   const markersRef = useRef([]);
 
   /* CREATE MAP */
@@ -36,7 +37,7 @@ function MapView({ utilities }) {
 
     map.current.addControl(
       new mapboxgl.NavigationControl(),
-      "top-right"
+      "bottom-right"
     );
 
     map.current.on("load", async () => {
@@ -278,7 +279,7 @@ function MapView({ utilities }) {
       let color = "green";
 
       if (u.risk === "Medium")
-        color = "orange";
+        color = "#eab308";
 
       if (u.risk === "High")
         color = "red";
@@ -302,7 +303,7 @@ function MapView({ utilities }) {
       const popupHtml = `
         <div class="font-display text-xs text-black bg-white border-2 border-black neo-brutalist p-2 w-56 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
           <div class="mb-1.5 border-b-2 border-black pb-1">
-            <h4 class="text-sm font-black-900 uppercase tracking-tighter ${color === 'red' ? 'text-red-600' : color === 'orange' ? 'text-yellow-600' : 'text-green-600'}">
+            <h4 class="text-sm font-black-900 uppercase tracking-tighter ${u.risk === 'High' ? 'text-red-600' : u.risk === 'Medium' ? 'text-yellow-600' : 'text-green-600'}">
               ${u.risk} - ${typeDisplay}
             </h4>
           </div>
@@ -473,43 +474,6 @@ function MapView({ utilities }) {
           height:"100%"
         }}
       />
-
-
-
-      {/* 2.5D BUTTON */}
-
-      <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-10 pb-4 pr-4">
-        <button
-
-          onClick={tiltMap}
-
-          className="neo-brutalist bg-blue-400 font-display font-black-900 text-sm hover:bg-blue-300 transition-colors uppercase"
-          style={{
-            padding: "6px 12px"
-          }}
-        >
-
-          2.5D View
-
-        </button>
-
-        {/* RESET BUTTON */}
-
-        <button
-
-          onClick={resetMap}
-
-          className="neo-brutalist bg-green-400 font-display font-black-900 text-sm hover:bg-green-300 transition-colors uppercase"
-          style={{
-            padding: "6px 12px"
-          }}
-
-        >
-
-          Reset View
-
-        </button>
-      </div>
 
     </div>
 

@@ -6,6 +6,9 @@ from risk_engine import calculate_risk
 
 app = FastAPI()
 
+
+# CORS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,8 +17,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Load dataset
+
 data = load_data()
 
+
+# ===============================
+# UTILITIES API
+# ===============================
 
 @app.get("/utilities")
 def get_utilities():
@@ -24,19 +34,35 @@ def get_utilities():
 
     for u in data:
 
-        risk, action = calculate_risk(
+        (
+            risk,
+            action,
+            probability,
+            outcome,
+            condition
+        ) = calculate_risk(
             u["age"],
-            u["usage"]
+            u["usage"],
+            u["type"]   # NEW PARAMETER
         )
 
         result.append({
+
             **u,
+
             "risk": risk,
-            "action": action
+            "action": action,
+            "probability": probability,
+            "outcome": outcome,
+            "condition": condition
+
         })
 
     return result
 
+# ===============================
+# CHAIN-BASED NETWORK
+# ===============================
 
 @app.get("/network")
 def get_network():
@@ -48,6 +74,7 @@ def get_network():
 
     grouped = {}
 
+    # Group utilities
     for u in data:
 
         grouped.setdefault(
@@ -55,37 +82,86 @@ def get_network():
             []
         ).append(u)
 
+    # Nearest-neighbor chain logic
+    def chain_points(points):
+
+        if not points:
+            return []
+
+        unused = points.copy()
+
+        chain = []
+
+        current = unused.pop(0)
+
+        chain.append([
+            current["lng"],
+            current["lat"]
+        ])
+
+        while unused:
+
+            nearest = min(
+
+                unused,
+
+                key=lambda p:
+
+                (
+                    (p["lat"] - current["lat"])**2 +
+                    (p["lng"] - current["lng"])**2
+
+                )
+
+            )
+
+            chain.append([
+                nearest["lng"],
+                nearest["lat"]
+            ])
+
+            unused.remove(nearest)
+
+            current = nearest
+
+        return chain
+
+
+    # Build networks
     for (t, g), items in grouped.items():
 
-        items.sort(
-            key=lambda x: x["id"]
-        )
-
-        coords = [
-            [u["lng"], u["lat"]]
-            for u in items
-        ]
+        coords = chain_points(items)
 
         if t == "Water":
+
             water_lines.append(coords)
 
         elif t == "Sewage":
+
             sewage_lines.append(coords)
 
         elif t == "Electricity":
 
             electric_lines.append(coords)
 
+            # Add poles
             for u in items:
 
                 poles.append({
+
                     "lat": u["lat"],
                     "lng": u["lng"]
+
                 })
 
     return {
+
         "water": water_lines,
+
         "sewage": sewage_lines,
+
         "electric": electric_lines,
+
         "poles": poles
+
     }

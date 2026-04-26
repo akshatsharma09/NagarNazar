@@ -4,7 +4,7 @@ function Legend() {
 
   return (
 
-    <div className="legendBox bg-pink-400 neo-brutalist p-3 font-display w-40 shrink-0">
+    <div className="legendBox bg-pink-400 neo-brutalist p-3 font-display min-w-[220px] w-max shrink-0">
 
       <h3 className="text-lg font-black-900 border-b-2 border-black pb-1 mb-2 uppercase tracking-tighter">Legend</h3>
 

@@ -1,5 +1,6 @@
 import csv
 
+
 def load_data():
 
     utilities = []
@@ -13,6 +14,10 @@ def load_data():
         reader = csv.DictReader(csvfile)
 
         for row in reader:
+
+            # Skip empty rows (important)
+            if not row["lat"] or not row["lng"]:
+                continue
 
             utilities.append({
 
@@ -28,13 +33,31 @@ def load_data():
 
                 "usage": int(row["usage"]),
 
-                # KEEP group as STRING
                 "group": row["group"],
 
-                # Optional start/end fields
-                "start": row.get("start","Unknown"),
+                "start": row.get("start", "Unknown"),
 
-                "end": row.get("end","Unknown")
+                "end": row.get("end", "Unknown"),
+
+                # NEW FIELDS
+                "location_name": row.get(
+                    "location_name",
+                    "Unknown"
+                ),
+
+                "material": row.get(
+                    "material",
+                    "Unknown"
+                ),
+
+                "diameter_mm": int(
+                    row.get("diameter_mm", 0)
+                ),
+
+                "last_inspection": row.get(
+                    "last_inspection",
+                    "Unknown"
+                )
 
             })
 
