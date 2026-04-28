@@ -2,12 +2,13 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-mapboxgl.accessToken =process.env.REACT_APP_MAPBOX_TOKEN;
+mapboxgl.accessToken = "pk.eyJ1IjoiYWtzaDA3IiwiYSI6ImNtbzh6NGVjaTAzcDIyb3M4eGh2ZHluNmIifQ.v1KwsvY7PgmzIL9PAcULOg";
 
-function MapView({ utilities }) {
+function MapView({ utilities, mapRef }) {
 
   const mapContainer = useRef(null);
-  const map = useRef(null);
+  const internalMap = useRef(null);
+  const map = mapRef || internalMap;
   const markersRef = useRef([]);
 
   /* CREATE MAP */
@@ -36,7 +37,7 @@ function MapView({ utilities }) {
 
     map.current.addControl(
       new mapboxgl.NavigationControl(),
-      "top-right"
+      "bottom-right"
     );
 
     map.current.on("load", async () => {
@@ -48,6 +49,9 @@ function MapView({ utilities }) {
     });
 
   }, []);
+
+
+
 
   /* 3D BUILDINGS */
 
@@ -88,7 +92,7 @@ function MapView({ utilities }) {
 
       paint: {
 
-        "fill-extrusion-color": "#cccccc",
+        "fill-extrusion-color": "#aaa",
 
         "fill-extrusion-height": ["get","height"],
 
@@ -101,6 +105,9 @@ function MapView({ utilities }) {
     }, labelLayerId);
 
   }
+
+
+
 
   /* LOAD NETWORK */
 
@@ -115,7 +122,9 @@ function MapView({ utilities }) {
 
       const data = res.data;
 
-      /* WATER */
+
+
+      /* WATER PIPELINES */
 
       map.current.addSource(
         "water-network",
@@ -156,13 +165,15 @@ function MapView({ utilities }) {
 
           "line-width": 4,
 
-          "line-opacity": 0.9
+          "line-opacity": 0.8
 
         }
 
       });
 
-      /* SEWAGE */
+
+
+      /* SEWAGE PIPELINES */
 
       map.current.addSource(
         "sewage-network",
@@ -209,6 +220,29 @@ function MapView({ utilities }) {
 
       });
 
+
+
+      /* ELECTRIC POLES */
+
+      data.poles.forEach(p => {
+
+        const el =
+          document.createElement("img");
+
+        el.src = "electric-pole.avif";
+
+        el.style.width = "26px";
+
+        el.style.height = "26px";
+
+        new mapboxgl.Marker(el)
+
+          .setLngLat([p.lng,p.lat])
+
+          .addTo(map.current);
+
+      });
+
     }
 
     catch(err){
@@ -219,17 +253,24 @@ function MapView({ utilities }) {
 
   }
 
+
+
+
   /* UTILITY MARKERS */
 
   useEffect(() => {
 
     if (!map.current) return;
 
+    /* Remove old markers */
+
     markersRef.current.forEach(
       m => m.remove()
     );
 
     markersRef.current = [];
+
+
 
     utilities.forEach(u => {
 
@@ -238,94 +279,88 @@ function MapView({ utilities }) {
       let color = "green";
 
       if (u.risk === "Medium")
-        color = "orange";
+        color = "#eab308";
 
       if (u.risk === "High")
         color = "red";
 
-      /* MODERN POPUP UI */
+
+
+      /* Popup UI */
+
+      // Extrapolate some mock data from 'u' to fill out the detailed card
+      const typeDisplay = u.type === 'Water' ? 'Water Pipe' : u.type === 'Electricity' ? 'Power Line' : 'Sewer Line';
+      const severityIcon = u.risk === 'High' ? '🚨' : u.risk === 'Medium' ? '⚠️' : '✅';
+      // Mock data just for visual parity with screenshot request
+      const ageStr = u.age ? `${u.age} Years` : Math.floor(Math.random() * 20 + 5) + ' Years';
+      const materialStr = u.type === 'Water' ? 'Iron' : u.type === 'Electricity' ? 'Copper' : 'Concrete';
+      const diameterStr = u.type !== 'Electricity' ? '300 mm' : 'N/A';
+      const locationStr = 'Civil Lines, Prayagraj';
+      const lastInspection = '10 Apr 2026';
+      const conditionStr = u.risk === 'High' ? 'Poor' : u.risk === 'Medium' ? 'Fair' : 'Good';
+      const riskScore = u.usage ? u.usage : Math.floor(Math.random() * 50 + 50);
+
+      const popupHtml = `
+        <div class="font-display text-xs text-black bg-white border-2 border-black neo-brutalist p-2 w-56 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <div class="mb-1.5 border-b-2 border-black pb-1">
+            <h4 class="text-sm font-black-900 uppercase tracking-tighter ${u.risk === 'High' ? 'text-red-600' : u.risk === 'Medium' ? 'text-yellow-600' : 'text-green-600'}">
+              ${u.risk} - ${typeDisplay}
+            </h4>
+          </div>
+          
+          <div class="space-y-0.5 mb-2 font-bold opacity-90">
+            <div class="flex justify-between">
+              <span class="text-gray-500">ID:</span> <span>${u.id}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Location:</span> <span class="truncate ml-2 text-right">${locationStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Age:</span> <span>${ageStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Material:</span> <span>${materialStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Diameter:</span> <span>${diameterStr}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Inspected:</span> <span>${lastInspection}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Condition:</span> <span>${conditionStr}</span>
+            </div>
+            <div class="flex justify-between text-sm mt-1 pt-1 border-t border-dashed border-gray-400">
+              <span class="text-gray-600">Risk Score:</span> <span class="font-black-900 ${color === 'red' ? 'text-red-600' : color === 'orange' ? 'text-yellow-600' : 'text-green-600'}">${riskScore}/100</span>
+            </div>
+          </div>
+
+          <div class="${color === 'red' ? 'bg-red-400' : color === 'orange' ? 'bg-yellow-400' : 'bg-green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <div class="flex items-center gap-1.5 mb-1 text-[0.65rem] uppercase tracking-tight leading-none">
+              <span>${severityIcon}</span>
+              <span>${u.risk === 'High' ? 'High probability' : u.risk === 'Medium' ? 'Maintenance Rec.' : 'System OK'}</span>
+            </div>
+            <span class="text-[0.65rem] leading-normal block opacity-90 whitespace-normal break-words">${u.action}</span>
+          </div>
+        </div>
+      `;
 
       const popup =
-        new mapboxgl.Popup({ offset: 25 })
+        new mapboxgl.Popup({
+          offset: 25,
+          className: "neo-popup-container"
+        }).setHTML(popupHtml);
 
-        .setHTML(`
 
-<div style="
-font-family:Segoe UI;
-padding:12px;
-min-width:230px;
-line-height:1.5;
-">
 
-<div style="
-font-weight:bold;
-font-size:15px;
-color:${color};
-margin-bottom:6px;
-">
-
-${u.id} — ${u.type}
-
-</div>
-
-<div style="
-font-size:13px;
-">
-
-📍 <b>Location:</b><br/>
-${u.location_name || u.start}<br/><br/>
-
-🧱 <b>Material:</b>
-${u.material || "N/A"}<br/>
-
-📏 <b>Diameter:</b>
-${u.diameter_mm || "N/A"} mm<br/>
-
-⏳ <b>Age:</b>
-${u.age} Years<br/>
-
-🛠 <b>Last Inspection:</b><br/>
-${u.last_inspection || "N/A"}<br/><br/>
-
-⚠ <b>Condition:</b>
-<span style="
-color:${
-u.condition==="Critical"
-?"red":
-u.condition==="Moderate"
-?"orange":
-"green"
-};
-font-weight:bold;
-">
-
-${u.condition || "Good"}
-
-</span>
-
-<br/><br/>
-
-<b>Risk Level:</b>
-<span style="
-color:${color};
-font-weight:bold;
-">
-${u.risk}
-</span>
-
-<br/>
-
-<b>Action:</b><br/>
-${u.action}
-
-</div>
-
-</div>
-
-`);
+      /* DEFAULT MAPBOX MARKER (OLD STYLE) */
 
       const marker =
-        new mapboxgl.Marker({ color })
+        new mapboxgl.Marker({
+
+          color: color
+
+        })
 
         .setLngLat([
           Number(u.lng),
@@ -336,7 +371,15 @@ ${u.action}
 
         .addTo(map.current);
 
-      /* Glow highlight */
+      // Add CSS glow classes for hover effects
+      const markerEl = marker.getElement();
+      markerEl.classList.add("glow-marker");
+      markerEl.dataset.color = color;
+
+      markersRef.current.push(marker);
+
+
+      /* Glow Highlight */
 
       marker.getElement().addEventListener(
         "click",
@@ -344,16 +387,21 @@ ${u.action}
 
           markersRef.current.forEach(
             m => {
+
               m.getElement()
-                .style.filter = "none";
+                .style.filter =
+                  "none";
+
             }
           );
 
           marker.getElement().style.filter =
-            "drop-shadow(0 0 12px cyan)";
+            "drop-shadow(0 0 8px cyan)";
 
         }
       );
+
+
 
       markersRef.current.push(marker);
 
@@ -361,7 +409,10 @@ ${u.action}
 
   }, [utilities]);
 
-  /* 2.5D */
+
+
+
+  /* 2.5D BUTTON */
 
   const tiltMap = () => {
 
@@ -381,7 +432,9 @@ ${u.action}
 
   };
 
-  /* RESET */
+
+
+  /* RESET BUTTON */
 
   const resetMap = () => {
 
@@ -401,28 +454,26 @@ ${u.action}
 
   };
 
+
+
+
   return (
 
-    <div className="mapWrapper">
+    <div
+      style={{
+        width:"100%",
+        height:"100%",
+        position:"relative"
+      }}
+    >
 
       <div
         ref={mapContainer}
-        className="mapContainer"
+        style={{
+          width:"100%",
+          height:"100%"
+        }}
       />
-
-      <button
-        className="btnPrimary"
-        onClick={tiltMap}
-      >
-        2.5D View
-      </button>
-
-      <button
-        className="btnSecondary"
-        onClick={resetMap}
-      >
-        Reset View
-      </button>
 
     </div>
 

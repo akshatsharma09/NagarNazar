@@ -46,14 +46,14 @@ function SearchBox({
 
   return (
 
-    <div className="searchBox">
+    <div className="searchBox absolute top-6 left-6 z-10 w-64 max-w-[calc(100vw-4rem)] pb-4 pr-4">
 
       <input
-
+        className="w-full bg-white neo-brutalist p-2 px-3 text-base font-display font-bold placeholder-gray-500 focus:outline-none focus:bg-yellow-100 transition-colors"
         type="text"
 
         placeholder=
-        "Search: Water, High, Electricity..."
+        "Search: Water, High..."
 
         value={searchText}
 

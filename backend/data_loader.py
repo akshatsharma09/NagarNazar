@@ -1,8 +1,9 @@
 import csv
 
+
 def load_data():
 
-    data = []
+    utilities = []
 
     with open("sample_data.csv", newline="") as file:
 
@@ -10,7 +11,11 @@ def load_data():
 
         for row in reader:
 
-            data.append({
+            # Skip empty rows (important)
+            if not row["lat"] or not row["lng"]:
+                continue
+
+            utilities.append({
 
                 "id": row["id"],
 
@@ -24,22 +29,32 @@ def load_data():
 
                 "usage": int(row["usage"]),
 
-                "start": row["start"],
-
-                "end": row["end"],
-
                 "group": row["group"],
 
-                "location_name": row["location_name"],
+                "start": row.get("start", "Unknown"),
 
-                "material": row["material"],
+                "end": row.get("end", "Unknown"),
 
-                "diameter_mm": int(row["diameter_mm"]),
+                # NEW FIELDS
+                "location_name": row.get(
+                    "location_name",
+                    "Unknown"
+                ),
 
-                "last_inspection": row["last_inspection"],
+                "material": row.get(
+                    "material",
+                    "Unknown"
+                ),
 
-                "condition": row["condition"]
+                "diameter_mm": int(
+                    row.get("diameter_mm", 0)
+                ),
+
+                "last_inspection": row.get(
+                    "last_inspection",
+                    "Unknown"
+                )
 
             })
 
-    return data
+    return utilities

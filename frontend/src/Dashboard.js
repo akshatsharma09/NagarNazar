@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import MapView from "./MapView";
 import Sidebar from "./Sidebar";
@@ -11,11 +11,13 @@ import "./styles.css";
 
 function Dashboard() {
 
+  const mapRef = useRef(null);
+
   const [utilities, setUtilities] = useState([]);
   const [filteredUtilities, setFilteredUtilities] = useState([]);
 
-  const [typeFilter, setTypeFilter] = useState("All");
-  const [riskFilter, setRiskFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState(["Water", "Electricity", "Sewage"]);
+  const [riskFilter, setRiskFilter] = useState(["High", "Medium", "Low"]);
 
   /* FETCH DATA */
   useEffect(() => {
@@ -32,12 +34,16 @@ function Dashboard() {
 
     let data = utilities;
 
-    if (typeFilter !== "All") {
-      data = data.filter(u => u.type === typeFilter);
+    if (typeFilter.length > 0) {
+      data = data.filter(u => typeFilter.includes(u.type));
+    } else {
+      data = [];
     }
 
-    if (riskFilter !== "All") {
-      data = data.filter(u => u.risk === riskFilter);
+    if (riskFilter.length > 0) {
+      data = data.filter(u => riskFilter.includes(u.risk));
+    } else {
+      data = [];
     }
 
     setFilteredUtilities(data);
@@ -45,20 +51,24 @@ function Dashboard() {
   }, [typeFilter, riskFilter, utilities]);
 
   return (
-    <div className="mainLayout">
+    <div className="mainLayout flex h-screen bg-blue-50 overflow-hidden font-display">
 
       <Sidebar
+        typeFilter={typeFilter}
         setTypeFilter={setTypeFilter}
+        riskFilter={riskFilter}
         setRiskFilter={setRiskFilter}
+        mapRef={mapRef}
       />
 
-      <div className="mapSection">
+      <div className="mapSection flex-1 relative m-4 ml-0 neo-brutalist border-4 border-black">
 
-        <MapView utilities={filteredUtilities} />
+        <MapView utilities={filteredUtilities} mapRef={mapRef} />
 
-        <Legend />
-
-        <StatsPanel data={filteredUtilities} />
+        <div className="absolute top-6 right-6 flex flex-col items-end gap-4 z-10 h-[calc(100%-3rem)] overflow-y-auto pb-6 hidden md:flex" style={{ width: 'auto' }}>
+          <Legend />
+          <StatsPanel data={filteredUtilities} />
+        </div>
 
         <SearchBox
           utilities={utilities}
