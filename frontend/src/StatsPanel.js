@@ -8,97 +8,86 @@ function StatsPanel({ data }) {
   const medium = data.filter(d => d.risk === "Medium").length;
   const low = data.filter(d => d.risk === "Low").length;
 
-  // ✅ Correct percentage calculation
   const highPct = total === 0 ? 0 : Math.round((high / total) * 100);
   const medPct = total === 0 ? 0 : Math.round((medium / total) * 100);
   const lowPct = total === 0 ? 0 : Math.round((low / total) * 100);
 
-  // ✅ FIXED: Proper conic gradient (NO deg mixing)
   const conicString = `conic-gradient(
-    #f87171 0% ${highPct}%,
-    #000 ${highPct}% ${highPct + 1}%,
+    #ef4444 0% ${highPct}%,
+    rgba(255,255,255,0.05) ${highPct}% ${highPct + 1}%,
     #facc15 ${highPct + 1}% ${highPct + medPct}%,
-    #000 ${highPct + medPct}% ${highPct + medPct + 1}%,
-    #4ade80 ${highPct + medPct + 1}% 100%
+    rgba(255,255,255,0.05) ${highPct + medPct}% ${highPct + medPct + 1}%,
+    #22c55e ${highPct + medPct + 1}% 100%
   )`;
 
   return (
 
-    <div className="statsBox bg-cyan-300 neo-brutalist p-3 pb-4 font-display w-max shrink-0 flex flex-col gap-3">
+    <div className="statsBox bg-[#0B0F19]/90 backdrop-blur-md border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-lg p-4 font-display w-max shrink-0 flex flex-col gap-4 text-zinc-300">
 
-      <h3 className="text-lg leading-none font-black-900 border-b-2 border-black pb-2 uppercase tracking-tighter w-full">
-        Stats
+      <h3 className="text-sm font-black border-b border-white/10 pb-2 uppercase tracking-widest w-full text-white">
+        Stats & Analytics
       </h3>
 
-      <div className="flex flex-row gap-4 items-stretch h-full">
+      <div className="flex flex-row gap-6 items-stretch h-full">
 
         {/* Left side */}
-        <div className="flex flex-col min-w-[9.5rem] justify-between h-full space-y-2">
-          <div className="space-y-2 text-sm font-bold flex flex-col justify-between flex-1">
+        <div className="flex flex-col min-w-[12rem] justify-between h-full space-y-3">
+          <div className="grid grid-cols-2 gap-3 flex-1">
 
-            <p className="flex justify-between items-center text-black bg-white neo-brutalist-sm px-2 py-1">
-              <span>TOTAL</span>
-              <span className="text-base">{total}</span>
-            </p>
+            <div className="flex flex-col justify-center items-center bg-white/5 border border-white/10 rounded-md p-2">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold mb-1">TOTAL</span>
+              <span className="text-xl font-black text-white">{total}</span>
+            </div>
 
-            <p className="flex justify-between items-center text-black bg-red-400 neo-brutalist-sm px-2 py-1">
-              <span>HIGH</span>
-              <span className="text-base">{high}</span>
-            </p>
+            <div className="flex flex-col justify-center items-center bg-red-500/10 border border-red-500/20 rounded-md p-2">
+              <span className="text-[10px] text-red-500 uppercase tracking-widest font-bold mb-1">HIGH RISK</span>
+              <span className="text-xl font-black text-red-500">{high}</span>
+            </div>
 
-            <p className="flex justify-between items-center text-black bg-yellow-400 neo-brutalist-sm px-2 py-1">
-              <span>MED</span>
-              <span className="text-base">{medium}</span>
-            </p>
+            <div className="flex flex-col justify-center items-center bg-yellow-400/10 border border-yellow-400/20 rounded-md p-2">
+              <span className="text-[10px] text-yellow-500 uppercase tracking-widest font-bold mb-1">MED RISK</span>
+              <span className="text-xl font-black text-yellow-500">{medium}</span>
+            </div>
 
-            <p className="flex justify-between items-center text-black bg-green-400 neo-brutalist-sm px-3 py-1">
-              <span>LOW</span>
-              <span className="text-xl">{low}</span>
-            </p>
+            <div className="flex flex-col justify-center items-center bg-green-500/10 border border-green-500/20 rounded-md p-2">
+              <span className="text-[10px] text-green-500 uppercase tracking-widest font-bold mb-1">LOW RISK</span>
+              <span className="text-xl font-black text-green-500">{low}</span>
+            </div>
 
           </div>
         </div>
 
         {/* Right side */}
         {total > 0 && (
-          <div className="flex flex-col p-2 bg-yellow-200 border-2 border-black neo-brutalist-sm w-[110px]">
+          <div className="flex flex-col p-3 bg-white/5 border border-white/10 rounded-md w-[140px]">
 
-            <h4 className="text-[10px] font-black-900 uppercase tracking-tighter pb-1 border-b-2 border-black w-full text-center">
-              Risk Div.
+            <h4 className="text-[10px] font-bold uppercase tracking-widest pb-2 border-b border-white/10 w-full text-center text-zinc-400">
+              Risk Distribution
             </h4>
 
-            <div className="flex-1 flex flex-col justify-center items-center py-2 h-[80px]">
+            <div className="flex-1 flex flex-col justify-center items-center py-4 h-[90px]">
 
-              {/* ✅ PIE FIXED */}
               <div
-                className="w-14 h-14 rounded-full border-2 border-black relative"
+                className="w-16 h-16 rounded-full relative shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                 style={{
-                  background: conicString,
-                  boxShadow: '3px 3px 0px 0px #000'
+                  background: conicString
                 }}
               >
-
-                {/* ✅ Donut center (visual fix) */}
-                <div className="absolute w-6 h-6 bg-yellow-200 border-2 border-black rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-
+                <div className="absolute w-10 h-10 bg-[#0B0F19] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]"></div>
               </div>
 
             </div>
 
-            <div className="flex w-full justify-between items-center text-[9px] font-black-900 mt-1">
-
-              <span className="text-red-700 bg-white border border-black px-0.5 neo-brutalist-sm">
+            <div className="flex w-full justify-between items-center text-[10px] font-bold mt-2">
+              <span className="text-red-500">
                 {highPct}%
               </span>
-
-              <span className="text-yellow-700 bg-white border border-black px-0.5 neo-brutalist-sm">
+              <span className="text-yellow-500">
                 {medPct}%
               </span>
-
-              <span className="text-green-700 bg-white border border-black px-0.5 neo-brutalist-sm">
+              <span className="text-green-500">
                 {lowPct}%
               </span>
-
             </div>
 
           </div>

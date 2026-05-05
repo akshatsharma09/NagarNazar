@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
-mapboxgl.accessToken = "pk.eyJ1IjoiYWtzaDA3IiwiYSI6ImNtbzh6NGVjaTAzcDIyb3M4eGh2ZHluNmIifQ.v1KwsvY7PgmzIL9PAcULOg";
+mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
 
 function MapView({ utilities, mapRef }) {
 
@@ -21,7 +21,7 @@ function MapView({ utilities, mapRef }) {
 
       container: mapContainer.current,
 
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/mapbox/dark-v11",
 
       center: [81.8463, 25.4358],
 
@@ -94,9 +94,9 @@ function MapView({ utilities, mapRef }) {
 
         "fill-extrusion-color": "#aaa",
 
-        "fill-extrusion-height": ["get","height"],
+        "fill-extrusion-height": ["get", "height"],
 
-        "fill-extrusion-base": ["get","min_height"],
+        "fill-extrusion-base": ["get", "min_height"],
 
         "fill-extrusion-opacity": 0.6
 
@@ -214,7 +214,7 @@ function MapView({ utilities, mapRef }) {
 
           "line-width": 3,
 
-          "line-dasharray": [2,2]
+          "line-dasharray": [2, 2]
 
         }
 
@@ -222,30 +222,56 @@ function MapView({ utilities, mapRef }) {
 
 
 
-      /* ELECTRIC POLES */
+      /* ELECTRIC PIPELINES */
 
-      data.poles.forEach(p => {
+      map.current.addSource(
+        "electric-network",
+        {
+          type: "geojson",
+          data: {
 
-        const el =
-          document.createElement("img");
+            type: "FeatureCollection",
 
-        el.src = "electric-pole.avif";
+            features:
+              data.electric.map(line => ({
 
-        el.style.width = "26px";
+                type: "Feature",
 
-        el.style.height = "26px";
+                geometry: {
+                  type: "LineString",
+                  coordinates: line
+                }
 
-        new mapboxgl.Marker(el)
+              }))
 
-          .setLngLat([p.lng,p.lat])
+          }
 
-          .addTo(map.current);
+        }
+      );
+
+      map.current.addLayer({
+
+        id: "electric-layer",
+
+        type: "line",
+
+        source: "electric-network",
+
+        paint: {
+
+          "line-color": "#eab308", // Yellow color for electricity
+
+          "line-width": 3,
+
+          "line-opacity": 0.8
+
+        }
 
       });
 
     }
 
-    catch(err){
+    catch (err) {
 
       console.error("Network load failed:", err);
 
@@ -301,46 +327,34 @@ function MapView({ utilities, mapRef }) {
       const riskScore = u.usage ? u.usage : Math.floor(Math.random() * 50 + 50);
 
       const popupHtml = `
-        <div class="font-display text-xs text-black bg-white border-2 border-black neo-brutalist p-2 w-56 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-          <div class="mb-1.5 border-b-2 border-black pb-1">
-            <h4 class="text-sm font-black-900 uppercase tracking-tighter ${u.risk === 'High' ? 'text-red-600' : u.risk === 'Medium' ? 'text-yellow-600' : 'text-green-600'}">
+        <div class="font-display text-xs text-white bg-[#0F172A] border border-white/20 p-3 w-64 shadow-[0_10px_40px_rgba(0,0,0,0.8)] rounded-lg relative overflow-hidden backdrop-blur-md">
+          <div class="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(255,255,255,0.02)] rounded-lg"></div>
+          <div class="mb-2 border-b border-white/10 pb-2 relative z-10">
+            <h4 class="text-sm font-black uppercase tracking-widest ${u.risk === 'High' ? 'text-red-500' : u.risk === 'Medium' ? 'text-yellow-500' : 'text-green-500'} flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full ${u.risk === 'High' ? 'bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]' : u.risk === 'Medium' ? 'bg-yellow-500 shadow-[0_0_8px_rgba(250,204,21,0.8)]' : 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]'}"></span>
               ${u.risk} - ${typeDisplay}
             </h4>
           </div>
           
-          <div class="space-y-0.5 mb-2 font-bold opacity-90">
-            <div class="flex justify-between">
-              <span class="text-gray-500">ID:</span> <span>${u.id}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Location:</span> <span class="truncate ml-2 text-right">${locationStr}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Age:</span> <span>${ageStr}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Material:</span> <span>${materialStr}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Diameter:</span> <span>${diameterStr}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Inspected:</span> <span>${lastInspection}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Condition:</span> <span>${conditionStr}</span>
-            </div>
-            <div class="flex justify-between text-sm mt-1 pt-1 border-t border-dashed border-gray-400">
-              <span class="text-gray-600">Risk Score:</span> <span class="font-black-900 ${color === 'red' ? 'text-red-600' : color === 'orange' ? 'text-yellow-600' : 'text-green-600'}">${riskScore}/100</span>
+          <div class="space-y-1 mb-3 font-medium text-zinc-400 relative z-10">
+            <div class="flex justify-between"><span class="text-zinc-500">ID:</span> <span class="text-white">${u.id}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Location:</span> <span class="text-white truncate ml-2 text-right">${locationStr}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Age:</span> <span class="text-white">${ageStr}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Material:</span> <span class="text-white">${materialStr}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Diameter:</span> <span class="text-white">${diameterStr}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Inspected:</span> <span class="text-white">${lastInspection}</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Condition:</span> <span class="text-white">${conditionStr}</span></div>
+            <div class="flex justify-between text-sm mt-2 pt-2 border-t border-white/10">
+              <span class="text-zinc-400">Risk Score:</span> <span class="font-black ${color === 'red' ? 'text-red-500' : color === 'orange' ? 'text-yellow-500' : 'text-green-500'}">${riskScore}/100</span>
             </div>
           </div>
 
-          <div class="${color === 'red' ? 'bg-red-400' : color === 'orange' ? 'bg-yellow-400' : 'bg-green-400'} border-2 border-black p-1.5 font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-            <div class="flex items-center gap-1.5 mb-1 text-[0.65rem] uppercase tracking-tight leading-none">
+          <div class="${color === 'red' ? 'bg-red-500/10 border-red-500/30' : color === 'orange' ? 'bg-yellow-500/10 border-yellow-500/30' : 'bg-green-500/10 border-green-500/30'} border p-2 rounded-md relative z-10">
+            <div class="flex items-center gap-2 mb-1 text-[0.7rem] uppercase tracking-widest font-bold ${color === 'red' ? 'text-red-400' : color === 'orange' ? 'text-yellow-400' : 'text-green-400'}">
               <span>${severityIcon}</span>
               <span>${u.risk === 'High' ? 'High probability' : u.risk === 'Medium' ? 'Maintenance Rec.' : 'System OK'}</span>
             </div>
-            <span class="text-[0.65rem] leading-normal block opacity-90 whitespace-normal break-words">${u.action}</span>
+            <span class="text-[0.65rem] leading-normal block text-zinc-300">${u.action}</span>
           </div>
         </div>
       `;
@@ -362,14 +376,14 @@ function MapView({ utilities, mapRef }) {
 
         })
 
-        .setLngLat([
-          Number(u.lng),
-          Number(u.lat)
-        ])
+          .setLngLat([
+            Number(u.lng),
+            Number(u.lat)
+          ])
 
-        .setPopup(popup)
+          .setPopup(popup)
 
-        .addTo(map.current);
+          .addTo(map.current);
 
       // Add CSS glow classes for hover effects
       const markerEl = marker.getElement();
@@ -390,7 +404,7 @@ function MapView({ utilities, mapRef }) {
 
               m.getElement()
                 .style.filter =
-                  "none";
+                "none";
 
             }
           );
@@ -461,17 +475,17 @@ function MapView({ utilities, mapRef }) {
 
     <div
       style={{
-        width:"100%",
-        height:"100%",
-        position:"relative"
+        width: "100%",
+        height: "100%",
+        position: "relative"
       }}
     >
 
       <div
         ref={mapContainer}
         style={{
-          width:"100%",
-          height:"100%"
+          width: "100%",
+          height: "100%"
         }}
       />
 

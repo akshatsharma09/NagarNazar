@@ -51,7 +51,7 @@ function Dashboard() {
   }, [typeFilter, riskFilter, utilities]);
 
   return (
-    <div className="mainLayout flex h-screen bg-blue-50 overflow-hidden font-display">
+    <div className="mainLayout flex h-screen bg-[#0B0F19] overflow-hidden font-display text-zinc-300">
 
       <Sidebar
         typeFilter={typeFilter}
@@ -61,7 +61,7 @@ function Dashboard() {
         mapRef={mapRef}
       />
 
-      <div className="mapSection flex-1 relative m-4 ml-0 neo-brutalist border-4 border-black">
+      <div className="mapSection flex-1 relative m-6 ml-0 border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.8)]">
 
         <MapView utilities={filteredUtilities} mapRef={mapRef} />
 

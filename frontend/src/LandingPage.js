@@ -1,177 +1,297 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
-import { Radar } from "lucide-react";
+import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
-import logoImg from "./logo.jpeg";
+const CityNetworkAnimation = () => {
+  const canvasRef = useRef(null);
 
-const LOGO_URL = logoImg;
-const CITY_IMAGE_URL =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAMXC93oMQLg9OS7PVkkaW204S44UXlFPPaKHOtbgCckzEdVONiBeHHiPX16SbL8XET3OEabPTKlFZFpEy54sHlTbQdPGJv0J3YRu32n-jrKH3--1ieGI4XDcrQzydNRqbJ9Xm43YTW5My9dzpqeTvYxrKsLL4-8mZMbKdtOyFIGmTKZHoJxc0sRxMRmU7DQYKW418U4hEXhcMUABRBpvpjg-aQI90J4-y_zGuS7nPe011YMgr1ESf-nFxVCmaOEGcT10QQquEVluG-";
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
 
-export default function LandingPage() {
-  const navigate = useNavigate();
+    const resizeCanvas = () => {
+      const parent = canvas.parentElement;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
+    const cols = 4;
+    const rows = 3;
+    const zones = [];
+
+    // Create city zones
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        zones.push({
+          x: (canvas.width / cols) * i,
+          y: (canvas.height / rows) * j,
+          w: canvas.width / cols,
+          h: canvas.height / rows,
+          label: String.fromCharCode(65 + i) + (j + 1)
+        });
+      }
+    }
+
+    const nodes = [];
+    for (let i = 0; i < 30; i++) {
+      // Risk: 0=Low(Green), 1=Medium(Yellow), 2=High(Red)
+      const risk = Math.random() > 0.85 ? 2 : Math.random() > 0.5 ? 1 : 0;
+      let color = '#4ade80'; // low (green)
+      if (risk === 1) color = '#facc15'; // med (yellow)
+      if (risk === 2) color = '#f87171'; // high (red)
+
+      // Node type: 0=Water(Blue), 1=Sewage(Purple), 2=Electricity(Orange)
+      const type = Math.floor(Math.random() * 3);
+      let lineColor = '#3b82f6'; // water (blue)
+      if (type === 1) lineColor = '#a855f7'; // sewage (purple)
+      if (type === 2) lineColor = '#f97316'; // electricity (orange)
+
+      nodes.push({
+        x: Math.random() * (canvas.width - 40) + 20,
+        y: Math.random() * (canvas.height - 40) + 20,
+        baseX: 0,
+        baseY: 0,
+        radius: risk === 2 ? 5 : risk === 1 ? 4 : 3,
+        color,
+        lineColor,
+        risk,
+        type,
+        pulse: Math.random() * Math.PI * 2,
+        connections: []
+      });
+    }
+
+    nodes.forEach(node => {
+      node.baseX = node.x;
+      node.baseY = node.y;
+    });
+
+    nodes.forEach((node, i) => {
+      nodes.forEach((other, j) => {
+        if (i !== j) {
+          const dist = Math.hypot(node.x - other.x, node.y - other.y);
+          if (dist < 120 && Math.random() > 0.5) {
+            node.connections.push(other);
+          }
+        }
+      });
+    });
+
+    const particles = [];
+    for (let i = 0; i < 30; i++) {
+      const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+      if (startNode && startNode.connections.length > 0) {
+        const endNode = startNode.connections[Math.floor(Math.random() * startNode.connections.length)];
+        particles.push({
+          start: startNode,
+          end: endNode,
+          progress: Math.random(),
+          speed: 0.005 + Math.random() * 0.01 + (startNode.risk * 0.005),
+        });
+      }
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#0a0a0c';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw zones
+      zones.forEach((zone, idx) => {
+        ctx.fillStyle = idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.05)';
+        ctx.fillRect(zone.x + 10, zone.y + 10, zone.w - 20, zone.h - 20);
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(zone.x + 10, zone.y + 10, zone.w - 20, zone.h - 20);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = 'bold 10px monospace';
+        ctx.fillText(`ZONE ${zone.label}`, zone.x + 20, zone.y + 25);
+      });
+
+      // Cluster highlight for high risk areas
+      nodes.forEach(node => {
+        if (node.risk === 2) {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 45, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, 45);
+          gradient.addColorStop(0, 'rgba(248, 113, 113, 0.15)');
+          gradient.addColorStop(1, 'rgba(248, 113, 113, 0)');
+          ctx.fillStyle = gradient;
+          ctx.fill();
+        }
+      });
+
+      // Draw connections
+      nodes.forEach(node => {
+        node.connections.forEach(other => {
+          ctx.beginPath();
+          ctx.moveTo(node.x, node.y);
+          ctx.lineTo(other.x, other.y);
+
+          let opacity = 0.3;
+          // Flicker effect for high risk connections
+          if (node.risk === 2 && Math.random() > 0.95) opacity = Math.random() * 0.8 + 0.2;
+
+          ctx.strokeStyle = node.lineColor;
+          ctx.globalAlpha = opacity;
+          ctx.lineWidth = node.risk === 2 ? 1.5 : 1;
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+        });
+      });
+
+      // Update and draw particles
+      particles.forEach(p => {
+        p.progress += p.speed;
+        if (p.progress >= 1) {
+          p.start = p.end;
+          if (p.start.connections.length > 0) {
+            p.end = p.start.connections[Math.floor(Math.random() * p.start.connections.length)];
+            p.progress = 0;
+            p.speed = 0.005 + Math.random() * 0.01 + (p.start.risk * 0.005);
+          } else {
+            p.start = nodes[Math.floor(Math.random() * nodes.length)];
+            if (p.start && p.start.connections.length > 0) {
+              p.end = p.start.connections[Math.floor(Math.random() * p.start.connections.length)];
+            }
+            p.progress = 0;
+          }
+        }
+
+        if (p.start && p.end) {
+          let x = p.start.x + (p.end.x - p.start.x) * p.progress;
+          let y = p.start.y + (p.end.y - p.start.y) * p.progress;
+
+          if (p.start.risk === 2) {
+            x += (Math.random() - 0.5) * 3;
+            y += (Math.random() - 0.5) * 3;
+          }
+
+          ctx.beginPath();
+          ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = p.start.lineColor;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.start.lineColor;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+      });
+
+      // Draw nodes
+      nodes.forEach((node) => {
+        node.pulse += node.risk === 2 ? 0.015 : 0.04;
+        node.x = node.baseX + Math.sin(node.pulse * 0.5) * 2;
+        node.y = node.baseY + Math.cos(node.pulse * 0.5) * 2;
+
+        ctx.beginPath();
+        let pulseMultiplier = node.risk === 2 ? 3 : node.risk === 1 ? 1.5 : 0.5;
+        // Blink effect for high risk
+        let isFlashing = node.risk === 2 && Math.random() > 0.98;
+        if (isFlashing) pulseMultiplier = 8;
+
+        const pulseRadius = node.radius + Math.sin(node.pulse) * pulseMultiplier;
+        ctx.arc(node.x, node.y, Math.max(0, pulseRadius), 0, Math.PI * 2);
+        ctx.fillStyle = isFlashing ? '#ffffff' : node.color;
+
+        ctx.shadowBlur = (node.risk === 2 ? 30 : node.risk === 1 ? 15 : 5) + Math.sin(node.pulse) * 5;
+        ctx.shadowColor = node.color;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, node.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="w-full h-full rounded-xl" />;
+};
+
+const LandingPage = () => {
   return (
-    <div
-      id="landing-brand-container"
-      className="h-screen w-full bg-[#FEFBEA] text-black font-sans selection:bg-[#FFD600]/50 flex flex-col overflow-hidden relative"
-    >
-      {/* Background Environment - Neo Brutalist geometric accents */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute -right-32 -top-32 w-[350px] h-[350px] border-[16px] border-[#EAE3C8] rounded-full opacity-60"></div>
-        <div className="absolute left-10 top-1/4 w-20 h-20 bg-[#F5E673] border-4 border-[#A5A08D] rotate-12 opacity-80 shadow-none"></div>
-        <div className="absolute right-16 bottom-1/4 w-28 h-28 bg-[#FFA6C9] border-4 border-[#B098A3] -rotate-[15deg] opacity-80 shadow-none"></div>
-      </div>
-
-      <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-4 md:py-6 text-center h-full">
-        <div className="max-w-5xl w-full flex flex-col items-center gap-2 md:gap-3 flex-grow justify-evenly overflow-visible">
-          {/* Top Identity & Typography */}
-          <div className="flex flex-col items-center justify-center gap-0">
-            {/* Branding Identity */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex-shrink-0"
-            >
-              <div className="relative inline-block border-[4px] border-black shadow-[6px_6px_0px_#000] rounded-[24px] bg-white overflow-hidden w-20 h-20 md:w-[100px] md:h-[100px]">
-                <img
-                  id="brand-logo"
-                  alt="NagarNazar Logo"
-                  className="w-[90%] h-[90%] object-contain m-auto translate-y-1"
-                  src={LOGO_URL}
-                />
-              </div>
-            </motion.div>
-
-      {/* Tagline */}
-      <p className="tagline">
-
-      </p>
-
-
-            {/* Typography Cluster */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="flex-shrink-0 flex flex-col items-center justify-center mt-2"
-            >
-              <h1
-                id="main-heading"
-                className="font-display text-[45px] md:text-[70px] font-black tracking-[-0.05em] uppercase leading-none m-0 pt-0"
-              >
-                NAGAR<span className="text-[#3300FF]">NAZAR</span>
-              </h1>
-            </motion.div>
-
-            {/* Subtitle Banner */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="flex-shrink-0 bg-[#FF007F] px-4 py-1 border-[3px] border-black shadow-[4px_4px_0px_#000] transform -rotate-[1.5deg] mt-1 mb-2 z-10"
-            >
-              <p className="font-display text-[9px] md:text-[13px] text-white tracking-[0.15em] uppercase font-black m-0 leading-tight">
-                APNE SHEHER KO DEKHO, SAMJHO AUR SURAKSHIT RAKHO
-              </p>
-            </motion.div>
-          </div>
-
-          {/* Description */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex-shrink-0 w-full max-w-[650px] bg-white px-6 py-5 border-[4px] border-black shadow-[8px_8px_0px_#000] z-0"
-          >
-            <p className="text-sm md:text-[18px] font-extrabold leading-snug tracking-tight text-center m-0">
-              City utility data is scattered.{" "}
-              <span className="text-[#3300FF] font-black underline decoration-[#3300FF] decoration-[3px] underline-offset-[3px] mx-1">
-                NagarNazar visualizes
-                <br className="hidden md:block" /> utilities in 2.5D
-              </span>{" "}
-              and predicts risk for smarter decisions.
-            </p>
-          </motion.div>
-
-          {/* Visual Anchor: 2.5D City Visualization */}
-          <motion.div
-            id="city-preview"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="relative flex-grow w-full max-w-[850px] max-h-[30vh] min-h-[0px] rounded-2xl overflow-hidden border-[6px] border-black shadow-[12px_12px_0px_#000] group bg-[#333]"
-          >
-            <img
-              alt="2.5D City Visualization"
-              className="w-full h-full object-cover opacity-90 transition-transform duration-700 grayscale"
-              src={CITY_IMAGE_URL}
-            />
-
-            {/* Center Radar Scanner overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                onClick={() => navigate("/pricing")}
-                style={{ cursor: "pointer" }}
-                animate={{ scale: [1, 1.02, 1] }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="px-3 py-2 bg-[#00FF99] border-[3px] border-black shadow-[4px_4px_0px_#000] flex items-center justify-center gap-2"
-              >
-                <div className="relative flex items-center justify-center w-5 h-5 bg-black rounded-full overflow-hidden">
-                  <div className="absolute w-[1px] h-[150%] bg-[#00FF99]/80 animate-[spin_2s_linear_infinite]"></div>
-                  <Radar className="w-3 h-3 text-[#00FF99]" />
-                </div>
-                <span className="font-display text-[10px] md:text-sm uppercase tracking-widest font-black text-black pt-0.5">
-                  View our Subscription Models
-                </span>
-              </motion.div>
-            </div>
-
-            {/* Top Left Coordinate overlay */}
-            <div className="absolute top-0 left-0 bg-black text-white px-3 py-1 font-display text-[8px] md:text-[10px] uppercase font-bold tracking-widest rounded-br-lg border-r-[3px] border-b-[3px] border-black">
-              Coord: 28.6139° N, 77.2090° E
-            </div>
-          </motion.div>
-
-          {/* Action Cluster */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="flex-shrink-0 flex flex-row items-center justify-center gap-4 md:gap-6 pt-0 pb-2"
-          >
-            <motion.button
-              id="btn-initialize"
-              whileHover={{
-                translate: "-4px -4px",
-                boxShadow: "12px 12px 0px #000",
-              }}
-              whileTap={{ translate: "2px 2px", boxShadow: "2px 2px 0px #000" }}
-              className="px-6 md:px-12 py-2 md:py-3 font-display text-[11px] md:text-[14px] font-black uppercase tracking-wider bg-[#3300FF] text-white border-[4px] border-black shadow-[8px_8px_0px_#000] transition-all"
-            >
-              UPLOAD LOCATION FILES
-            </motion.button>
-
-            <motion.button
-              id="btn-explore"
-              onClick={() => navigate("/dashboard")}
-              whileHover={{
-                translate: "-4px -4px",
-                boxShadow: "12px 12px 0px #000",
-              }}
-              whileTap={{ translate: "2px 2px", boxShadow: "2px 2px 0px #000" }}
-              className="px-6 md:px-12 py-2 md:py-3 font-display text-[11px] md:text-[14px] font-black uppercase tracking-wider bg-white text-black border-[4px] border-black shadow-[8px_8px_0px_#000] transition-all"
-            >
-              EXPLORE MAP
-            </motion.button>
-          </motion.div>
+    <div className="bg-[#0B0F19] font-body-md text-zinc-400 overflow-x-hidden min-h-screen flex flex-col relative transition-opacity duration-700 ease-in-out">
+      <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent to-[#05080f]"></div>
+      {/* TopNavBar */}
+      <nav className="sticky top-0 z-50 flex justify-between items-center px-8 py-4 max-w-7xl mx-auto w-full bg-[#111827]/90 backdrop-blur-md rounded-full border border-white/10 mx-4 mt-6 shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all duration-300 hover:translate-y-[-2px] hover:shadow-[0_8px_40px_rgba(0,0,0,0.6)] relative z-10 border-b-[1px] border-b-white/10">
+        <div className="text-3xl font-black tracking-tighter uppercase text-yellow-400 italic drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]">NagarNazar</div>
+        <div className="hidden md:flex gap-8 items-center bg-white/5 backdrop-blur-sm px-6 py-2 rounded-full border border-white/10">
+          <Link className="font-['Plus_Jakarta_Sans'] font-bold text-lg uppercase text-zinc-300 hover:text-white hover:scale-105 transition-all relative group" to="/reports">
+            Reports
+            <span className="absolute -bottom-1 left-0 w-0 h-1 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></span>
+          </Link>
+          <Link className="font-['Plus_Jakarta_Sans'] font-bold text-lg uppercase text-zinc-300 hover:text-white hover:scale-105 transition-all relative group" to="/maintenance">
+            Maintenance
+            <span className="absolute -bottom-1 left-0 w-0 h-1 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></span>
+          </Link>
+          <Link className="font-['Plus_Jakarta_Sans'] font-bold text-lg uppercase text-zinc-300 hover:text-white hover:scale-105 transition-all relative group" to="/pricing">
+            Plans
+            <span className="absolute -bottom-1 left-0 w-0 h-1 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_10px_rgba(250,204,21,0.5)]"></span>
+          </Link>
         </div>
-      </main>
+      </nav>
+
+      {/* HeroSection */}
+      <section className="max-w-7xl mx-auto px-container-padding py-20 flex flex-col md:flex-row items-center gap-12 flex-grow relative z-10">
+        <div className="flex-1 space-y-8">
+          <div className="inline-block bg-white/5 border border-white/10 px-4 py-1 rounded-full text-zinc-300 font-bold uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(255,255,255,0.05)] backdrop-blur-sm">
+            Smart City Solution
+          </div>
+          <h1 className="font-headline-xl text-headline-xl text-white uppercase leading-none drop-shadow-md">
+            Apne Seher ko<span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-transparent bg-clip-text drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]"> Dekho, Samjho aur Surakshit</span> rakho
+          </h1>
+          <p className="font-body-lg text-body-lg text-zinc-400 max-w-xl">
+            The pulse of the streets in real-time. Detect leaks, monitor sewage, and manage city power with a vibrant, high-energy dashboard built for action.
+          </p>
+          <div className="flex flex-wrap gap-6 mt-8">
+            <Link className="bg-gradient-to-r from-yellow-400 to-orange-500 px-8 py-4 rounded-xl text-black font-black text-xl shadow-[0_0_20px_rgba(255,200,0,0.4)] hover:scale-105 hover:-translate-y-1 transition-all duration-300 uppercase flex items-center gap-3" to="/dashboard">
+              View Dashboard
+              <span className="material-symbols-outlined"></span>
+            </Link>
+          </div>
+        </div>
+        <div className="flex-1 relative z-10">
+          <div className="bg-[#0F172A] border border-white/10 rounded-[16px] p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden h-[500px] relative group transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.9)] hover:-translate-y-2">
+            <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_50px_rgba(255,255,255,0.02)] rounded-[16px]"></div>
+            <div className="absolute top-4 left-4 z-10 flex gap-2">
+              <div className="w-3 h-3 bg-red-500 rounded-full border border-white/20 shadow-[0_0_10px_rgba(239,68,68,0.8)]"></div>
+              <div className="w-3 h-3 bg-yellow-400 rounded-full border border-white/20 shadow-[0_0_10px_rgba(250,204,21,0.8)]"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full border border-white/20 shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
+            </div>
+            <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex flex-col gap-1 items-end shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+              <p className="font-bold text-sm uppercase flex items-center gap-2 text-white/90 tracking-widest">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+                Active Risk Detection
+              </p>
+              <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">
+                Live Utility Monitoring System
+              </p>
+            </div>
+            <div className="w-full h-full rounded-lg border border-white/5 overflow-hidden relative">
+              <CityNetworkAnimation />
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
-}
+};
+
+export default LandingPage;

@@ -29,7 +29,6 @@ code {
     box-shadow: 4px 4px 0px 0px #000;
   }
 
-
   .font-display {
     font-family: 'Space Grotesk', sans-serif !important;
   }
@@ -37,6 +36,30 @@ code {
   .font-black-900 {
     font-weight: 900;
   }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+  }
+
+  .neo-shadow {
+    box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+  }
+
+  .neo-shadow-lg {
+    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+  }
+
+  .neo-shadow-sm {
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+  }
+
+  .neo-button-hover:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+  }
+
+  .neo-button-active:active {
+    transform: translate(6px, 6px);
+    box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+  }
 }
-
-
