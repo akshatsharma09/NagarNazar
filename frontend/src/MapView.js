@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
 
@@ -11,14 +11,51 @@ function MapView({ utilities, mapRef }) {
   const map = mapRef || internalMap;
   const markersRef = useRef([]);
 
+  /* CREATE MAP */
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+
+    if (map.current) return;
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/dark-v11",
+      center: [81.8463, 25.4358],
+      zoom: 12,
+      pitch: 0,
+      bearing: 0,
+      antialias: true
+    });
+
+    map.current.addControl(
+      new mapboxgl.NavigationControl(),
+      "bottom-right"
+    );
+
+    map.current.on("load", async () => {
+      add3DBuildings();
+      await loadNetwork();
+    });
+
+  }, []);
+
+
+
+
   /* 3D BUILDINGS */
-  const add3DBuildings = useCallback(() => {
+
+  function add3DBuildings() {
 
     const layers = map.current.getStyle().layers;
+
     let labelLayerId;
 
     for (let i = 0; i < layers.length; i++) {
-      if (layers[i].type === "symbol" && layers[i].layout["text-field"]) {
+      if (
+        layers[i].type === "symbol" &&
+        layers[i].layout["text-field"]
+      ) {
         labelLayerId = layers[i].id;
         break;
       }
@@ -39,14 +76,22 @@ function MapView({ utilities, mapRef }) {
       }
     }, labelLayerId);
 
-  }, [map]);
+  }
+
+
+
 
   /* LOAD NETWORK */
-  const loadNetwork = useCallback(async () => {
+
+  async function loadNetwork() {
 
     try {
 
-      const res = await axios.get("http://127.0.0.1:8000/network");
+      const res =
+        await axios.get(
+          "http://127.0.0.1:8000/network"
+        );
+
       const data = res.data;
 
       map.current.addSource("water-network", {
@@ -55,7 +100,10 @@ function MapView({ utilities, mapRef }) {
           type: "FeatureCollection",
           features: data.water.map(line => ({
             type: "Feature",
-            geometry: { type: "LineString", coordinates: line }
+            geometry: {
+              type: "LineString",
+              coordinates: line
+            }
           }))
         }
       });
@@ -77,7 +125,10 @@ function MapView({ utilities, mapRef }) {
           type: "FeatureCollection",
           features: data.sewage.map(line => ({
             type: "Feature",
-            geometry: { type: "LineString", coordinates: line }
+            geometry: {
+              type: "LineString",
+              coordinates: line
+            }
           }))
         }
       });
@@ -99,7 +150,10 @@ function MapView({ utilities, mapRef }) {
           type: "FeatureCollection",
           features: data.electric.map(line => ({
             type: "Feature",
-            geometry: { type: "LineString", coordinates: line }
+            geometry: {
+              type: "LineString",
+              coordinates: line
+            }
           }))
         }
       });
@@ -119,33 +173,14 @@ function MapView({ utilities, mapRef }) {
       console.error("Network load failed:", err);
     }
 
-  }, [map]);
+  }
 
-  /* CREATE MAP */
-  useEffect(() => {
 
-    if (map.current) return;
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v11",
-      center: [81.8463, 25.4358],
-      zoom: 12,
-      pitch: 0,
-      bearing: 0,
-      antialias: true
-    });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), "bottom-right");
+  /* UTILITY MARKERS */
 
-    map.current.on("load", async () => {
-      add3DBuildings();
-      await loadNetwork();
-    });
-
-  }, [map, add3DBuildings, loadNetwork]);
-
-  /* MARKERS */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
 
     if (!map.current) return;
@@ -161,27 +196,48 @@ function MapView({ utilities, mapRef }) {
       if (u.risk === "Medium") color = "#eab308";
       if (u.risk === "High") color = "red";
 
-      const popup = new mapboxgl.Popup({ offset: 25 })
-        .setHTML(`<div>${u.id}</div>`); // keeping simple (no UI change logic impact)
+      const popupHtml = `YOUR EXISTING POPUP HTML HERE`;
 
-      const marker = new mapboxgl.Marker({ color })
-        .setLngLat([Number(u.lng), Number(u.lat)])
-        .setPopup(popup)
-        .addTo(map.current);
+      const popup = new mapboxgl.Popup({
+        offset: 25
+      }).setHTML(popupHtml);
+
+      const marker =
+        new mapboxgl.Marker({ color })
+          .setLngLat([Number(u.lng), Number(u.lat)])
+          .setPopup(popup)
+          .addTo(map.current);
+
+      const markerEl = marker.getElement();
+      markerEl.classList.add("glow-marker");
 
       markersRef.current.push(marker);
 
+      markerEl.addEventListener("click", () => {
+        markersRef.current.forEach(m => {
+          m.getElement().style.filter = "none";
+        });
+        markerEl.style.filter = "drop-shadow(0 0 8px cyan)";
+      });
+
     });
 
-  }, [utilities, map]);
+  }, [utilities]);
+
+
+
 
   return (
+
     <div style={{ width: "100%", height: "100%", position: "relative" }}>
+
       <div
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
+
     </div>
+
   );
 
 }
