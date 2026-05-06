@@ -13,7 +13,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://nagar-nazar.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -267,4 +267,4 @@ def update_task(task_update: TaskUpdate):
     if task_update.id in maintenance_tasks:
         maintenance_tasks[task_update.id]["status"] = task_update.status
         return {"success": True, "task": maintenance_tasks[task_update.id]}
-    return {"success": False, "error": "Task not found"}
+    return {"success": False, "error": "Task not found"}
