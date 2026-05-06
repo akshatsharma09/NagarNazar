@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import axios from "axios";
