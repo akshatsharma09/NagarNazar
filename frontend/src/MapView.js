@@ -90,7 +90,7 @@ function MapView({ utilities, mapRef }) {
 
       const res =
         await axios.get(
-          "http://127.0.0.1:8000/network"
+          "https://nagarnazar.onrender.com/network"
         );
 
       const data = res.data;
