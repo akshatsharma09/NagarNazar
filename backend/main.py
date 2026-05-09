@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
+import re
 
 from data_loader import load_data
 from risk_engine import calculate_risk
@@ -9,15 +10,43 @@ from risk_engine import calculate_risk
 app = FastAPI()
 
 
-# CORS
+# CORS — allowed origins (production + Vercel previews + local dev)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["https://nagar-nazar.vercel.app"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+ALLOWED_ORIGINS = [
+    "https://nagar-nazar.vercel.app",   # production
+    "http://localhost:3000",             # local dev
+    "http://127.0.0.1:3000",            # local dev (alternate)
+]
+
+# Allow all Vercel preview deployment URLs for this project
+VERCEL_PREVIEW_RE = re.compile(r"^https://nagar-nazar-[a-z0-9\-]+-akshatsharma09\.vercel\.app$")
+
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import Response
+
+class DynamicCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        origin = request.headers.get("origin", "")
+        is_allowed = (
+            origin in ALLOWED_ORIGINS or
+            bool(VERCEL_PREVIEW_RE.match(origin))
+        )
+        if request.method == "OPTIONS" and is_allowed:
+            response = Response(status_code=200)
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+            return response
+
+        response = await call_next(request)
+        if is_allowed:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
+
+app.add_middleware(DynamicCORSMiddleware)
 
 
 # Load dataset
