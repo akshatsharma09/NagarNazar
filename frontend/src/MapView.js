@@ -193,14 +193,85 @@ function MapView({ utilities, mapRef }) {
 
       if (!u.lat || !u.lng) return;
 
-      let color = "green";
-      if (u.risk === "Medium") color = "#eab308";
-      if (u.risk === "High") color = "red";
+      let color = "#22c55e"; // green-500
+      if (u.risk === "Medium") color = "#facc15"; // yellow-400
+      if (u.risk === "High") color = "#ef4444"; // red-500
 
-      const popupHtml = `YOUR EXISTING POPUP HTML HERE`;
+      const riskColor = color;
+
+      const typeLabelMap = {
+        "Water": "WATER PIPE",
+        "Electricity": "ELECTRIC CABLE",
+        "Sewage": "SEWAGE LINE"
+      };
+      const typeLabel = typeLabelMap[u.type] || u.type.toUpperCase();
+
+      const probLabelMap = {
+        "High": "HIGH PROBABILITY",
+        "Medium": "MEDIUM PROBABILITY",
+        "Low": "LOW PROBABILITY"
+      };
+      const probLabel = probLabelMap[u.risk] || u.risk.toUpperCase();
+
+      // Format date: "2026-03-10" → "10 Mar 2026"
+      const formatDate = (dateStr) => {
+        if (!dateStr || dateStr === "Unknown") return "\u2014";
+        const d = new Date(dateStr);
+        if (isNaN(d)) return dateStr;
+        return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+      };
+
+      // Build detail rows
+      const riskScoreVal = u.risk_score != null ? u.risk_score : Math.round(((u.age || 0) * 0.6) + ((u.usage || 0) * 0.4));
+      
+      const rows = [
+        ["ID",         u.id || "\u2014"],
+        ["Location",   (u.location_name || "\u2014") + ", Prayagraj"],
+        ["Age",        u.age ? u.age + " Years" : "\u2014"],
+        ["Material",   u.material || "\u2014"],
+        ["Diameter",   u.diameter_mm ? u.diameter_mm + " mm" : "\u2014"],
+        ["Inspected",  formatDate(u.last_inspection)],
+        ["Condition",  u.condition || "\u2014"],
+        ["Risk Score", riskScoreVal + "/100"],
+      ];
+
+      const rowsHtml = rows.map(function(pair) {
+        const isRiskScore = pair[0] === "Risk Score";
+        return (
+          '<div style="display:flex;justify-content:space-between;font-size:12px;' +
+          'padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);' + 
+          (isRiskScore ? 'margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);' : '') + '">' +
+          '<span style="color:#9ca3af;font-weight:600;font-family:\'Space Grotesk\',sans-serif;">' + pair[0] + ':</span>' +
+          '<span style="color:' + (isRiskScore ? riskColor : '#f3f4f6') + ';font-weight:' + (isRiskScore ? '900' : '700') + ';text-align:right;' + 
+          (isRiskScore ? 'font-size:15px;letter-spacing:0.02em;font-family:\'Space Grotesk\',sans-serif;' : 'max-width:140px;font-family:\'Inter\',sans-serif;') + '">' + pair[1] + '</span>' +
+          '</div>'
+        );
+      }).join("");
+
+      const popupHtml = (
+        '<div style="font-family:\'Space Grotesk\',sans-serif;min-width:260px;overflow:hidden;border-radius:14px;background:rgba(17, 24, 39, 0.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.6);">' +
+          '<div style="background:' + riskColor + ';color:#fff;font-size:11px;font-weight:900;' +
+          'letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-family:\'Space Grotesk\',sans-serif;">' +
+            '<span>' + u.risk + ' RISK \u2014 ' + typeLabel + '</span>' +
+            '<span style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-size:10px;">' + (u.id || 'N/A') + '</span>' +
+          '</div>' +
+          '<div style="padding:12px 14px 8px;display:flex;flex-direction:column;gap:2px;">' +
+            rowsHtml +
+          '</div>' +
+          '<div style="background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.08);padding:10px 14px;margin-top:4px;">' +
+            '<div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;' +
+            'color:' + riskColor + ';margin-bottom:6px;display:flex;align-items:center;gap:6px;font-family:\'Space Grotesk\',sans-serif;">' +
+              '<span style="font-size:12px;display:inline-block;transform:translateY(-1px);">\u26a0</span> ' + probLabel + 
+            '</div>' +
+            '<div style="font-size:11px;color:#e5e7eb;line-height:1.5;font-weight:500;font-family:\'Inter\',sans-serif;">' + (u.action || "No immediate action required.") + '</div>' +
+          '</div>' +
+        '</div>'
+      );
 
       const popup = new mapboxgl.Popup({
-        offset: 25
+        offset: 25,
+        className: "neo-popup-container",
+        maxWidth: "280px"
       }).setHTML(popupHtml);
 
       const marker =
@@ -211,6 +282,7 @@ function MapView({ utilities, mapRef }) {
 
       const markerEl = marker.getElement();
       markerEl.classList.add("glow-marker");
+      markerEl.setAttribute("data-color", color);  // required for CSS glow selectors
 
       markersRef.current.push(marker);
 
@@ -218,7 +290,7 @@ function MapView({ utilities, mapRef }) {
         markersRef.current.forEach(m => {
           m.getElement().style.filter = "none";
         });
-        markerEl.style.filter = "drop-shadow(0 0 8px cyan)";
+        markerEl.style.filter = `drop-shadow(0 0 10px ${riskColor}) drop-shadow(0 0 20px ${riskColor}66)`;
       });
 
     });

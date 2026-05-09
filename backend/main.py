@@ -64,7 +64,7 @@ def get_utilities():
     result = []
 
     for u in data:
-
+        r_score = round((u["age"] * 0.6) + (u["usage"] * 0.4))
         (
             risk,
             action,
@@ -74,7 +74,7 @@ def get_utilities():
         ) = calculate_risk(
             u["age"],
             u["usage"],
-            u["type"]   # NEW PARAMETER
+            u["type"]
         )
 
         result.append({
@@ -85,7 +85,8 @@ def get_utilities():
             "action": action,
             "probability": probability,
             "outcome": outcome,
-            "condition": condition
+            "condition": condition,
+            "risk_score": r_score
 
         })
 
@@ -225,6 +226,7 @@ def get_report_summary():
 def get_report_critical():
     result = []
     for u in data:
+        r_score = round((u["age"] * 0.6) + (u["usage"] * 0.4))
         risk, action, probability, outcome, condition = calculate_risk(u["age"], u["usage"], u["type"])
         if risk == "High":
             result.append({
@@ -233,7 +235,8 @@ def get_report_critical():
                 "action": action,
                 "probability": probability,
                 "outcome": outcome,
-                "condition": condition
+                "condition": condition,
+                "risk_score": r_score
             })
     return result
 
@@ -241,6 +244,7 @@ def get_report_critical():
 def get_report_filter(type: Optional[str] = None, risk: Optional[str] = None):
     result = []
     for u in data:
+        r_score = round((u["age"] * 0.6) + (u["usage"] * 0.4))
         r, action, probability, outcome, condition = calculate_risk(u["age"], u["usage"], u["type"])
         if type and type != "All" and u["type"] != type:
             continue
@@ -252,7 +256,8 @@ def get_report_filter(type: Optional[str] = None, risk: Optional[str] = None):
             "action": action,
             "probability": probability,
             "outcome": outcome,
-            "condition": condition
+            "condition": condition,
+            "risk_score": r_score
         })
     return result
 
