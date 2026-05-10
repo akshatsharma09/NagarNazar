@@ -1,240 +1,147 @@
-# 🏙️ NagarNazar — Smart City Infrastructure Intelligence System
+![NagarNazar Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=45&pause=1000&color=3B82F6&center=true&vCenter=true&width=800&lines=%F0%9F%8F%99%EF%B8%8F+NAGAR+NAZAR;Smart+City+Intelligence;Visualizing+Future+Cities)
 
-> Turning scattered city utility data into visual insights, predictive alerts, and smarter infrastructure decisions.
+<p align="center">
+  <img src="./media/header.png" width="100%" alt="NagarNazar 3D Header">
+</p>
+
+<p align="center">
+  <b>Turning scattered city utility data into visual insights, predictive alerts, and smarter infrastructure decisions.</b>
+</p>
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-NagarNazar-2563EB?style=for-the-badge)](https://nagar-nazar.vercel.app/)
-[![GitHub](https://img.shields.io/badge/📦_Open_Source-GitHub-000000?style=for-the-badge\&logo=github)](https://github.com/akshatsharma09/NagarNazar)
-[![Built With](https://img.shields.io/badge/React_•_Mapbox_•_Python-Full_Stack-FF007F?style=for-the-badge)](https://github.com/akshatsharma09/NagarNazar)
+[![Live Demo](https://img.shields.io/badge/%F0%9F%9A%80_Live_Demo-NagarNazar-2563EB?style=for-the-badge)](https://nagar-nazar.vercel.app/)
+[![GitHub](https://img.shields.io/badge/%F0%9F%93%A6_Open_Source-GitHub-000000?style=for-the-badge&logo=github)](https://github.com/akshatsharma09/NagarNazar)
+[![Built With](https://img.shields.io/badge/React_%E2%80%A2_Mapbox_%E2%80%A2_Python-Full_Stack-FF007F?style=for-the-badge)](https://github.com/akshatsharma09/NagarNazar)
+[![Stars](https://img.shields.io/github/stars/akshatsharma09/NagarNazar?style=for-the-badge&color=gold)](https://github.com/akshatsharma09/NagarNazar/stargazers)
 
 </div>
 
 ---
 
-# 🌟 About NagarNazar
+## 🌟 Overview
 
-**NagarNazar** is a smart city infrastructure visualization and monitoring platform built during **HackDiwas 3.0**.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/Assets/Digital_City.gif" width="600" alt="Smart City Animation">
+</p>
 
-The system helps visualize urban utility networks such as:
+**NagarNazar** is a cutting-edge smart city visualization platform developed during **HackDiwas 3.0**. It bridges the gap between raw infrastructure data and actionable urban intelligence.
 
-* 💧 Water pipelines
-* ⚡ Electricity infrastructure
-* 🚽 Sewage systems
-
-using an interactive **2.5D Map Interface** powered by **Mapbox GL**.
-
-Beyond visualization, NagarNazar also introduces:
-
-* 🚨 Risk Detection
-* 📊 Infrastructure Monitoring
-* 🔍 Utility Analytics
-* 🧠 Predictive Insights
-
-so authorities can identify vulnerable infrastructure before failures occur.
+By leveraging an interactive **2.5D Map Interface**, we empower city authorities to monitor, analyze, and predict the health of vital utility networks.
 
 ---
 
-# ✨ Key Features
+## ✨ Key Features
 
-| Feature                | Description                                       |
-| ---------------------- | ------------------------------------------------- |
-| 🗺️ 2.5D Smart Mapping | Interactive utility visualization using Mapbox    |
-| ⚡ Utility Layering     | Water, sewage & electricity network display       |
-| 🚨 Risk Detection      | Low / Medium / High risk infrastructure analysis  |
-| 📍 Smart Markers       | Infrastructure point visualization with analytics |
-| 📊 Dashboard Analytics | Utility statistics and monitoring panels          |
-| 🔍 Filtering System    | Utility-based and risk-based filtering            |
-| 🧠 Predictive Insights | Detect possible infrastructure failures           |
-| 📱 Responsive UI       | Works across desktop and modern devices           |
+<table width="100%">
+  <tr>
+    <td width="50%">
+      <h3>🗺️ 3D/2.5D Smart Mapping</h3>
+      <p>Interactive utility visualization using Mapbox GL with tilted city views and building extrusions.</p>
+    </td>
+    <td width="50%">
+      <h3>⚡ Multi-Layer Utility View</h3>
+      <p>Seamlessly toggle between Water, Sewage, and Electricity infrastructure layers.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>🚨 Intelligent Risk Detection</h3>
+      <p>Real-time analysis categorizing infrastructure into Low, Medium, and High-risk zones.</p>
+    </td>
+    <td width="50%">
+      <h3>🧠 Predictive Insights</h3>
+      <p>Identify potential failure points before they occur using advanced data analytics.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <h3>📊 Analytics Dashboard</h3>
+      <p>Comprehensive panels showing utility statistics, health metrics, and monitoring data.</p>
+    </td>
+    <td width="50%">
+      <h3>📱 Responsive Design</h3>
+      <p>A neo-brutalist UI optimized for both large monitoring screens and mobile devices.</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
-# 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-## Frontend
-
-* React.js
-* Mapbox GL JS
-* Axios
-* Tailwind CSS
-* Framer Motion
-
-## Backend
-
-* Python
-* Flask
-* REST APIs
-
-## Deployment
-
-* Vercel
-* GitHub
+<div align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Mapbox-000000?style=for-the-badge&logo=mapbox&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+</div>
 
 ---
 
-# 🚀 Local Setup
+## 👥 Meet The Team
 
-## 1️⃣ Clone Repository
+<div align="center">
 
+| [<img src="https://github.com/NamrahArfin.png" width="120px;"/><br /><sub><b>Namrah Arfin</b></sub>](https://github.com/NamrahArfin) | [<img src="https://github.com/abdul-samad-001.png" width="120px;"/><br /><sub><b>Abdul Samad</b></sub>](https://github.com/abdul-samad-001) | [<img src="https://github.com/akshatsharma09.png" width="120px;"/><br /><sub><b>Akshat Sharma</b></sub>](https://github.com/akshatsharma09) | [<img src="https://github.com/ShrutiMishra30.png" width="120px;"/><br /><sub><b>Shruti Mishra</b></sub>](https://github.com/ShrutiMishra30) |
+| :---: | :---: | :---: | :---: |
+| Designer, Strategist & Documentation | Frontend & UI/UX Developer | Backend Developer | Project Support |
+
+</div>
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Clone & Navigate
 ```bash
 git clone https://github.com/akshatsharma09/NagarNazar.git
 cd NagarNazar
 ```
 
----
-
-## 2️⃣ Setup Frontend
-
+### 2️⃣ Launch Frontend
 ```bash
 cd frontend
 npm install
 npm start
 ```
 
-Frontend runs on:
-
-```bash
-http://localhost:3000
-```
-
----
-
-## 3️⃣ Setup Backend
-
-Open another terminal:
-
+### 3️⃣ Launch Backend
 ```bash
 cd backend
 pip install -r requirements.txt
 python app.py
 ```
 
-Backend runs on:
+---
 
-```bash
-http://localhost:8000
-```
+## 📸 System Snapshots
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Visual_Design-Neo--Brutalist-FFCC00?style=flat-square" />
+  <img src="https://img.shields.io/badge/Map_Engine-Mapbox_GL-3B82F6?style=flat-square" />
+</p>
+
+> **Note:** For a full interactive experience, visit our [Live Demo](https://nagar-nazar.vercel.app/).
 
 ---
 
-# 🗺️ System Modules
+## 🔮 Future Roadmap
 
-## 📌 Interactive Utility Mapping
-
-Visualize utility assets directly on the city map.
-
-* Utility markers
-* Infrastructure tracking
-* Real-time layer rendering
-* Popup analytics
-
----
-
-## ⚠️ Risk Analysis Engine
-
-The system categorizes infrastructure into:
-
-* 🟢 Low Risk
-* 🟡 Medium Risk
-* 🔴 High Risk
-
-based on utility conditions and monitoring parameters.
-
----
-
-## 🏙️ 2.5D City Visualization
-
-Using Mapbox 3D capabilities:
-
-* 3D Buildings
-* Tilted city view
-* Infrastructure overlays
-* Interactive navigation
-
----
-
-# 📸 Project Preview
-
-## Landing Page
-
-* Neo-brutalist UI
-* Animated branding
-* Interactive transitions
-* Smart city themed design
-
-## Dashboard
-
-* Infrastructure monitoring
-* Utility visualization
-* Risk filtering
-* Analytics panels
-
----
-
-# 🎯 Problem Statement
-
-City utility data is often:
-
-* Scattered
-* Difficult to monitor
-* Hard to visualize
-* Reactive instead of proactive
-
-NagarNazar solves this by converting infrastructure data into:
-
-✅ Clear visual maps
-✅ Predictive insights
-✅ Actionable monitoring dashboards
-
----
-
-# 👨‍💻 Team Fourmation
-
-Built during **HackDiwas 3.0** by:
-
-* Namrah Arfin
-* Abdul Samad
-* Akshat Sharma
-* Shruti Mishra
-
----
-
-# 🔮 Future Scope
-
-* 🌡️ IoT Sensor Integration
-* 📡 Real-time Utility Monitoring
-* 🧠 AI-based Failure Prediction
-* 🚨 Smart Alerts System
-* 📱 Mobile Application
-* ☁️ Cloud Infrastructure Support
-
----
-
-# 🌐 Live Project
-
-🚀 Live Demo:
-
-[https://nagar-nazar.vercel.app/](https://nagar-nazar.vercel.app/)
-
-📦 GitHub Repository:
-
-[https://github.com/akshatsharma09/NagarNazar](https://github.com/akshatsharma09/NagarNazar)
-
----
-
-# ⭐ Support
-
-If you liked the project:
-
-* ⭐ Star the repository
-* 🍴 Fork the project
-* 📢 Share it with others
+- [ ] **IoT Integration:** Connecting real-time sensors to the utility layers.
+- [ ] **AI Failure Prediction:** Using ML models for more accurate risk forecasting.
+- [ ] **Mobile App:** Dedicated Android/iOS application for field workers.
+- [ ] **Public Reporting:** Allowing citizens to report utility issues directly.
 
 ---
 
 <div align="center">
 
-### Built with ❤️ for smarter cities
+### Built with ❤️ during HackDiwas 3.0
+
+[![Star this repo](https://img.shields.io/badge/⭐-Star_on_GitHub-FACC15?style=for-the-badge)](https://github.com/akshatsharma09/NagarNazar)
 
 </div>
+
