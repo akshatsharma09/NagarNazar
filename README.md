@@ -1,8 +1,6 @@
 ![NagarNazar Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=45&pause=1000&color=3B82F6&center=true&vCenter=true&width=800&lines=%F0%9F%8F%99%EF%B8%8F+NagarNazar;Smart+City+Intelligence;Visualizing+Future+Cities)
 
-<p align="center">
-  <img src="./media/header.png" width="100%" alt="NagarNazar 3D Header">
-</p>
+![NagarNazar 3D Header](media/header.png)
 
 <p align="center">
   <b>Turning scattered city utility data into visual insights, predictive alerts, and smarter infrastructure decisions.</b>
@@ -13,10 +11,6 @@
 [![Live Demo](./media/live_demo.png)](https://nagar-nazar.vercel.app/)
 
 <br/>
-
-[![GitHub](https://img.shields.io/badge/%F0%9F%93%A6_Open_Source-GitHub-000000?style=for-the-badge&logo=github)](https://github.com/akshatsharma09/NagarNazar)
-[![Built With](https://img.shields.io/badge/React_%E2%80%A2_Mapbox_%E2%80%A2_Python-Full_Stack-FF007F?style=for-the-badge)](https://github.com/akshatsharma09/NagarNazar)
-[![Stars](https://img.shields.io/github/stars/akshatsharma09/NagarNazar?style=for-the-badge&color=gold)](https://github.com/akshatsharma09/NagarNazar/stargazers)
 
 </div>
 
