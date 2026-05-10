@@ -10,7 +10,10 @@
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/%F0%9F%9A%80_Live_Demo-NagarNazar-2563EB?style=for-the-badge)](https://nagar-nazar.vercel.app/)
+[![Live Demo](./media/live_demo.png)](https://nagar-nazar.vercel.app/)
+
+<br/>
+
 [![GitHub](https://img.shields.io/badge/%F0%9F%93%A6_Open_Source-GitHub-000000?style=for-the-badge&logo=github)](https://github.com/akshatsharma09/NagarNazar)
 [![Built With](https://img.shields.io/badge/React_%E2%80%A2_Mapbox_%E2%80%A2_Python-Full_Stack-FF007F?style=for-the-badge)](https://github.com/akshatsharma09/NagarNazar)
 [![Stars](https://img.shields.io/github/stars/akshatsharma09/NagarNazar?style=for-the-badge&color=gold)](https://github.com/akshatsharma09/NagarNazar/stargazers)
@@ -20,10 +23,6 @@
 ---
 
 ## 🌟 Overview
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/main/Assets/Digital_City.gif" width="600" alt="Smart City Animation">
-</p>
 
 **NagarNazar** is a cutting-edge smart city visualization platform developed during **HackDiwas 3.0**. It bridges the gap between raw infrastructure data and actionable urban intelligence.
 
@@ -70,14 +69,15 @@ By leveraging an interactive **2.5D Map Interface**, we empower city authorities
 
 ## 🛠️ Technology Stack
 
-<div align="center">
-  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img src="https://img.shields.io/badge/Mapbox-000000?style=for-the-badge&logo=mapbox&logoColor=white" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" />
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
-</div>
+<p align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=3B82F6&center=true&vCenter=true&width=600&lines=Frontend:+React+%E2%80%A2+Mapbox+%E2%80%A2+Tailwind;Backend:+Python+%E2%80%A2+Flask+%E2%80%A2+REST+APIs;Deployment:+Vercel+%E2%80%A2+GitHub+%E2%80%A2+Git" alt="Tech Stack Typing" />
+</p>
+
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,python,flask,tailwind,vercel,github,vscode,postman,figma&theme=dark" />
+  </a>
+</p>
 
 ---
 
@@ -87,7 +87,7 @@ By leveraging an interactive **2.5D Map Interface**, we empower city authorities
 
 | [<img src="https://github.com/NamrahArfin.png" width="120px;"/><br /><sub><b>Namrah Arfin</b></sub>](https://github.com/NamrahArfin) | [<img src="https://github.com/abdul-samad-001.png" width="120px;"/><br /><sub><b>Abdul Samad</b></sub>](https://github.com/abdul-samad-001) | [<img src="https://github.com/akshatsharma09.png" width="120px;"/><br /><sub><b>Akshat Sharma</b></sub>](https://github.com/akshatsharma09) | [<img src="https://github.com/ShrutiMishra30.png" width="120px;"/><br /><sub><b>Shruti Mishra</b></sub>](https://github.com/ShrutiMishra30) |
 | :---: | :---: | :---: | :---: |
-| Designer, Strategist & Documentation | Frontend & UI/UX Developer | Backend Developer | Project Support |
+| Designer, Strategist & Documentation | Frontend & UI/UX Developer | Backend Developer & ML Specialist | Project Support |
 
 </div>
 
