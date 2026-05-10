@@ -1,4 +1,4 @@
-![NagarNazar Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=45&pause=1000&color=3B82F6&center=true&vCenter=true&width=800&lines=%F0%9F%8F%99%EF%B8%8F+NAGAR+NAZAR;Smart+City+Intelligence;Visualizing+Future+Cities)
+![NagarNazar Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=45&pause=1000&color=3B82F6&center=true&vCenter=true&width=800&lines=%F0%9F%8F%99%EF%B8%8F+NagarNazar;Smart+City+Intelligence;Visualizing+Future+Cities)
 
 <p align="center">
   <img src="./media/header.png" width="100%" alt="NagarNazar 3D Header">
@@ -123,6 +123,12 @@ python app.py
   <img src="https://img.shields.io/badge/Visual_Design-Neo--Brutalist-FFCC00?style=flat-square" />
   <img src="https://img.shields.io/badge/Map_Engine-Mapbox_GL-3B82F6?style=flat-square" />
 </p>
+
+### 🏙️ Landing Page
+![Landing Page](./media/landing.png)
+
+### 📊 Intelligence Dashboard
+![Dashboard](./media/dashboard.png)
 
 > **Note:** For a full interactive experience, visit our [Live Demo](https://nagar-nazar.vercel.app/).
 
