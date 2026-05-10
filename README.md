@@ -8,7 +8,7 @@
 
 <div align="center">
 
-[![Live Demo](./media/live_demo.png)](https://nagar-nazar.vercel.app/)
+[<img src="./media/live_demo.png" width="200" alt="Live Demo Button">](https://nagar-nazar.vercel.app/)
 
 <br/>
 
